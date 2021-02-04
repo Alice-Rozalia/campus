@@ -1,0 +1,105 @@
+.bodyContainer {
+    height: 100%;
+    background-color: #f8f8f9;
+}
+
+.mainWarp {
+    width: 1200px;
+    margin: 0 auto;
+}
+
+.banner {
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    background-color: #fff;
+    box-shadow: 0 6px 15px 0 rgb(7 17 27 / 10%);
+}
+
+.menuContent {
+    float: left;
+    width: 180px;
+    height: 440px;
+    box-sizing: border-box;
+    background: #2b333b;
+    border-bottom-left-radius: 4px;
+    font-weight: 400;
+    padding-top: 10px;
+    overflow-y: auto;
+}
+
+.menuContent::-webkit-scrollbar {
+    width: 3px;
+    height: 10px;
+    background-color: #F5F5F5;
+}
+
+/*定义滚动条轨道 内阴影+圆角*/
+.menuContent::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+    background-color: #F5F5F5;
+}
+
+/*定义滑块 内阴影+圆角*/
+.menuContent::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: #555;
+}
+
+.menuItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    font-size: 13px;
+    color: hsla(0, 0%, 100%, .6);
+    cursor: pointer;
+    padding: 0 12px 0 28px;
+}
+
+.menuItem:hover {
+    background-color: #6b7176;
+}
+
+.rightBox {
+    overflow: hidden;
+}
+
+.swiper {
+    width: 1020px;
+    height: 360px;
+    overflow: hidden;
+}
+
+.swiperItem {
+    height: 360px;
+    background-color: #00a4ff;
+    color: #f0f1f2;
+}
+
+.orderBox {
+    padding: 15px 30px;
+    overflow: hidden;
+}
+
+.tags {
+    height: 30px;
+}
+
+.orderItem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.orderItemPrice {
+    margin: 0 16px;
+}
+
+.activeOrder {
+    color: #00a4ff;
+}
