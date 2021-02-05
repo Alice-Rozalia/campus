@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { ElMessage } from 'element-plus'
+import NProgress from 'nprogress'
 
 const isPrd: boolean = process.env.NODE_ENV === 'production'
 
@@ -14,6 +15,7 @@ const request = axios.create({
 })
 
 request.interceptors.request.use((config: AxiosRequestConfig) => {
+  NProgress.start()
   return config
 }, error => {
   return Promise.reject(error)
@@ -23,6 +25,7 @@ request.interceptors.response.use((config: AxiosResponse<any>) => {
   if (!config.data.success) {
     ElMessage.error(config.data.message || '服务器端异常！')
   }
+  NProgress.done()
   return config
 }, error => {
   if (error.response.status === 504 || error.response.status === 404) {

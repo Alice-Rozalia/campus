@@ -12,8 +12,8 @@
     <div class="right-box">
       <div class="swiper">
         <el-carousel height="360px">
-          <el-carousel-item style="background-color: #00a4ff" v-for="item in 3" :key="item">
-            <h3 class="small">{{ item }}</h3>
+          <el-carousel-item v-for="item in 3" :key="item">
+            <img src="https://kuro-campus.oss-cn-shenzhen.aliyuncs.com/swiper/majo_bg_s01up01_03.png" style="width: 100%;" />
           </el-carousel-item>
         </el-carousel>
       </div>
