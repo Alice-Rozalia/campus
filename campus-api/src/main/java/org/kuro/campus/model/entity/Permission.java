@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.List;
 
 /**
  * @Author: 白鸟亦悲否？
@@ -31,4 +32,7 @@ public class Permission {
 
     @ApiModelProperty(value = "是否可用")
     private Boolean enabled;
+
+    @ApiModelProperty(value = "访问权限需要的角色")
+    private List<Role> roles;
 }
