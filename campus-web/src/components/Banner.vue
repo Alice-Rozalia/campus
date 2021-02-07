@@ -2,7 +2,7 @@
   <div class="banner">
     <!-- 左侧菜单-->
     <div class="menu-content">
-      <div class="menu-item" v-for="item in categories" :key="item.id">
+      <div class="menu-item" v-for="item in categories" :key="item.id" @mouseenter="showCategoryDetail(item)">
         <span>{{item.name}}</span>
         <i class="el-icon-caret-right"></i>
       </div>
@@ -13,7 +13,8 @@
       <div class="swiper">
         <el-carousel height="360px">
           <el-carousel-item v-for="item in 3" :key="item">
-            <img src="https://kuro-campus.oss-cn-shenzhen.aliyuncs.com/swiper/majo_bg_s01up01_03.png" style="width: 100%;" />
+            <img src="https://kuro-campus.oss-cn-shenzhen.aliyuncs.com/swiper/majo_bg_s01up01_03.png"
+                 style="width: 100%;"/>
           </el-carousel-item>
         </el-carousel>
       </div>
@@ -25,6 +26,17 @@
           <div class="active-order">时间<i class="el-icon-top"></i></div>
           <div class="order-item-price">价格</div>
           <div>浏览量</div>
+        </div>
+      </div>
+
+      <div class="menu-detail" v-show="JSON.stringify(actionCategory) !== '{}'" @mouseleave="hideCategoryDetail()">
+        <el-divider>{{actionCategory.name}}</el-divider>
+
+        <div class="menu-detail-list-content">
+          <div class="menu-detail-items" v-for="val in actionCategory.children" :key="val.id">
+            <img :src="val.image">
+            <p>{{val.name}}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -39,7 +51,8 @@ export default defineComponent({
   name: 'Banner',
   setup() {
     const state = reactive({
-      categories: []
+      categories: [],
+      actionCategory: {}
     })
     const getCategories = async () => {
       const { data } = await fetchCategoriesApi()
@@ -48,12 +61,22 @@ export default defineComponent({
       }
     }
 
+    const showCategoryDetail = (item: object) => {
+      state.actionCategory = item
+    }
+
+    const hideCategoryDetail = () => {
+      state.actionCategory = {}
+    }
+
     onMounted(() => {
       getCategories()
     })
 
     return {
-      ...toRefs(state)
+      ...toRefs(state),
+      showCategoryDetail,
+      hideCategoryDetail
     }
   }
 })

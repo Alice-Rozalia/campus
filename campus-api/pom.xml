@@ -31,7 +31,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.49</version>
+            <version>5.1.32</version>
         </dependency>
         <!-- mybatis启动器 -->
         <dependency>

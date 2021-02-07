@@ -1,16 +1,18 @@
 package org.kuro.campus.auth;
 
-import org.kuro.campus.service.impl.DetailServiceImpl;
+import org.kuro.campus.service.impl.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.web.cors.CorsUtils;
 
 /**
  * @Author: 白鸟亦悲否？
@@ -20,13 +22,13 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private DetailServiceImpl detailService;
+    private UserDetailServiceImpl userDetailService;
 
     @Autowired
     private CustomFilter customFilter;
 
     @Autowired
-    private CustomDecisionManager decisionManager;
+    private CustomDecisionManager customDecisionManager;
 
     /**
      * 登录成功的处理逻辑
@@ -49,6 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * 用户被挤下线处理逻辑
      */
+    @Autowired
     private CustomSessionInformationExpiredStrategy strategy;
 
     @Bean
@@ -58,35 +61,47 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(detailService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userDetailService).passwordEncoder(passwordEncoder());
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/login")
+                .antMatchers("/api/v1/pub/**")
+                .antMatchers("/doc.html")
+                .antMatchers("/webjars/**")
+                .antMatchers("/img.icons/**")
+                .antMatchers("/swagger-resources/**")
+                .antMatchers("/v2/api-docs");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                // 所有请求都要认证之后才能访问
                 .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
                     @Override
                     public <O extends FilterSecurityInterceptor> O postProcess(O o) {
-                        o.setAccessDecisionManager(decisionManager);
+                        o.setAccessDecisionManager(customDecisionManager);
                         o.setSecurityMetadataSource(customFilter);
                         return o;
                     }
                 })
                 .and()
                 .formLogin()
-                .loginProcessingUrl("/doLogin")
+                .usernameParameter("username")
+                .passwordParameter("password")
+                .loginProcessingUrl("/api/v1/pub/doLogin")
                 .loginPage("/login")
                 .successHandler(successHandler)
                 .failureHandler(failureHandler)
                 .permitAll()
                 .and()
                 .logout()
+                .logoutUrl("/api/v1/pri/logout")
                 .logoutSuccessHandler(logoutSuccessHandler)
-                .deleteCookies("JSESSIONID")
                 .permitAll()
                 .and()
-                .sessionManagement()
-                .maximumSessions(1)
-                .expiredSessionStrategy(strategy);
+                .csrf().disable();
     }
 }

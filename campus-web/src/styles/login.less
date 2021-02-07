@@ -1,0 +1,60 @@
+.login-container {
+  position: relative;
+  height: 100vh;
+  background: radial-gradient(200% 100% at bottom center, #0070aa, #0b2570, #000035, #000);
+  background: radial-gradient(220% 105% at top center, #000 10%, #000035 40%, #0b2570 65%, #0070aa);
+  background-attachment: fixed;
+  overflow: hidden;
+
+  .stars {
+    position: absolute;
+    transform: perspective(500px);
+    transform-style: preserve-3d;
+    perspective-origin: 50% 100%;
+    left: 50%;
+    bottom: 0;
+    animation: rotate 90s infinite linear;
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: #f7f7b8;
+      top: 0;
+      left: 0;
+      /* 隐藏被旋转的 div 元素的背面 */
+      backface-visibility: hidden;
+    }
+  }
+
+  .login-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 478px;
+    height: 300px;
+    background-color: hsla(228, 61%, 18%, 0.50);
+    padding: 15px 60px;
+    box-sizing: border-box;
+    border-radius: 8px;
+
+    .login-title {
+      color: #fff;
+      font-size: 26px;
+      height: 80px;
+      line-height: 70px;
+      text-align: center;
+    }
+  }
+}
+
+/* 动画 */
+@keyframes rotate {
+  0% {
+    transform: perspective(400px) rotateZ(20deg) rotateX(-40deg) rotateY(0);
+  }
+  100% {
+    transform: perspective(400px) rotateZ(20deg) rotateX(-40deg) rotateY(-360deg);
+  }
+}

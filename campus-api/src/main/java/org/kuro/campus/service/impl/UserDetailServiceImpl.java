@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
  * @Date: 2021/2/5 23:18
  */
 @Service
-public class DetailServiceImpl implements UserDetailsService {
+public class UserDetailServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserMapper userMapper;
@@ -24,7 +24,7 @@ public class DetailServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = userMapper.loadUserByUsername(s);
         if (user == null) {
-            throw new BusinessException(ResultCode.USER_ACCOUNT_NOT_EXIST.getCode(), ResultCode.USER_ACCOUNT_NOT_EXIST.getMessage());
+            throw new UsernameNotFoundException(String.format("用户%s不存在", s));
         }
         user.setRoles(userMapper.getRolesById(user.getId()));
         return user;

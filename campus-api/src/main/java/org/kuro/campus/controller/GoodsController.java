@@ -1,8 +1,10 @@
 package org.kuro.campus.controller;
 
 import io.swagger.annotations.Api;
+import org.kuro.campus.model.response.Result;
 import org.kuro.campus.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,6 +19,5 @@ public class GoodsController {
 
     @Autowired
     private GoodsService goodsService;
-
 
 }

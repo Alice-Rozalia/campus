@@ -52,6 +52,7 @@
 
   .right-box {
     overflow: hidden;
+    position: relative;
 
     .swiper {
       width: 1020px;
@@ -80,6 +81,38 @@
 
         .active-order {
           color: #00a4ff;
+        }
+      }
+    }
+
+    .menu-detail {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 650px;
+      height: 100%;
+      background-color: #fff;
+      z-index: 9;
+      padding: 20px;
+
+      .menu-detail-list-content {
+        display: flex;
+        flex-wrap: wrap;
+
+        .menu-detail-items {
+          margin: 8px 12px;
+
+          > img {
+            width: 84px;
+            height: 80px;
+          }
+
+          >p {
+            font-size: 13px;
+            text-align: center;
+            height: 22px;
+            line-height: 22px;
+          }
         }
       }
     }

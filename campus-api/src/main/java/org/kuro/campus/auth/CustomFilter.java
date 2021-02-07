@@ -21,8 +21,6 @@ import java.util.List;
 @Component
 public class CustomFilter implements FilterInvocationSecurityMetadataSource {
 
-    AntPathMatcher pathMatcher = new AntPathMatcher();
-
     @Autowired
     private PermissionService permissionService;
 
@@ -32,7 +30,7 @@ public class CustomFilter implements FilterInvocationSecurityMetadataSource {
         String requestUrl = ((FilterInvocation) o).getRequestUrl();
         List<Permission> permissions = permissionService.getAllPermissions();
         for (Permission permission : permissions) {
-            if (pathMatcher.match(permission.getUrl(), requestUrl)) {
+            if (permission.getUrl().equals(requestUrl)) {
                 List<Role> roles = permission.getRoles();
                 String[] rolesStr = new String[roles.size()];
                 for (int i = 0; i < roles.size(); i++) {
@@ -41,6 +39,7 @@ public class CustomFilter implements FilterInvocationSecurityMetadataSource {
                 return SecurityConfig.createList(rolesStr);
             }
         }
+
         return SecurityConfig.createList("ROLE_login");
     }
 

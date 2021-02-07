@@ -10,8 +10,8 @@
         </el-input>
       </div>
       <div class="header-right">
-        <el-avatar src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"></el-avatar>
-        <span class="username">登录</span>
+        <router-link to="/login" class="right-menu-item">登录</router-link>
+        <router-link to="/register" class="right-menu-item">注册</router-link>
       </div>
     </div>
   </header>

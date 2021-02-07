@@ -3,15 +3,15 @@
 <mapper namespace="org.kuro.campus.mapper.UserMapper">
 
     <sql id="selectFields">
-        `id`,`username`,`create_time`,`address`,`phone`,`enabled`,`avatar`,`admin`,`locked`,`password`
+        `id`,`username`,`create_time`,`address`,`phone`,`enabled`,`avatar`,`admin`,`password`
     </sql>
 
-    <select id="loadUserByUsername" resultType="User">
+    <select id="loadUserByUsername" resultType="org.kuro.campus.model.entity.User">
         select <include refid="selectFields"></include>
         from tb_user where username = #{username}
     </select>
 
-    <select id="getRolesById" resultType="Role">
+    <select id="getRolesById" resultType="org.kuro.campus.model.entity.Role">
         select `id`, `name`, `describe`
         from tb_role
         where id in (select `role_id` from tb_user_role where user_id = #{id})
