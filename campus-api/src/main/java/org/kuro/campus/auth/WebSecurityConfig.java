@@ -66,17 +66,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/login")
-                .antMatchers("/api/v1/pub/**")
-                .antMatchers("/doc.html")
-                .antMatchers("/webjars/**")
-                .antMatchers("/img.icons/**")
-                .antMatchers("/swagger-resources/**")
-                .antMatchers("/v2/api-docs");
+        web.ignoring().antMatchers("/login");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        // 解决跨域问题。cors 预检请求放行, 让 Spring security 放行所有preflight request（cors 预检请求）
+        http.authorizeRequests().requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
+
         http.authorizeRequests()
                 // 所有请求都要认证之后才能访问
                 .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
