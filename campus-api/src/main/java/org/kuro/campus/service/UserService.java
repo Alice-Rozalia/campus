@@ -1,6 +1,7 @@
 package org.kuro.campus.service;
 
 import org.kuro.campus.model.entity.User;
+import org.kuro.campus.model.response.Result;
 
 /**
  * @Author: 白鸟亦悲否？
@@ -13,5 +14,5 @@ public interface UserService {
      * @param user
      * @return
      */
-    Integer register(User user);
+    Result register(User user);
 }

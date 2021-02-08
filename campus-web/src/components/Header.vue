@@ -16,7 +16,16 @@
         </div>
         <div v-else class="login-user-info">
           <span>{{loginUser.username}}</span>
-          <el-avatar class="right-menu-item" :src="loginUser.avatar"></el-avatar>
+          <el-dropdown>
+            <el-avatar class="right-menu-item" :size="50" :src="loginUser.avatar"></el-avatar>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item>个人中心</el-dropdown-item>
+                <el-dropdown-item>账号设置</el-dropdown-item>
+                <el-dropdown-item divided @click="logout">退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </div>
       </div>
     </div>
@@ -25,6 +34,8 @@
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, ref } from 'vue'
+import { logoutApi } from '@/api/user'
+import { successMessage } from '@/utils/message'
 
 export default defineComponent({
   name: 'Header',
@@ -42,9 +53,18 @@ export default defineComponent({
       }
     })
 
+    const logout = async () => {
+      const { data } = await logoutApi()
+      if (data.success) {
+        successMessage(data.message)
+        window.sessionStorage.clear()
+      }
+    }
+
     return {
       isLogin,
-      loginUser
+      loginUser,
+      logout
     }
   }
 })

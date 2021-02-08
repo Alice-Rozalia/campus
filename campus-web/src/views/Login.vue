@@ -6,53 +6,38 @@
     </div>
 
     <div class="login-box">
-      <div class="login-title">登录</div>
-      <el-form :model="loginForm" :rules="rules" ref="loginFormRef">
-        <el-form-item prop="username">
-          <el-input v-model="loginForm.username" prefix-icon="el-icon-user" placeholder="用户名"/>
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input v-model="loginForm.password" prefix-icon="el-icon-lock" type="password" show-password
-                    placeholder="密码"/>
-        </el-form-item>
-        <el-form-item>
-          <el-button @click="login('loginFormRef')" :loading="loading" type="primary" style="width: 100%">登录</el-button>
-        </el-form-item>
-      </el-form>
+      <div class="login-title" v-if="isLogin">登录</div>
+      <div class="login-title" v-else>注册</div>
+
+      <login-form :loginForm="loginForm" :rules="rules" v-if="isLogin"/>
+      <register-form :registerUser="registerUser" :rules="rules" v-else/>
+
       <div class="login-box-footer">
-        <span>还没有账号？<router-link to="/register" class="footer-link">前往注册</router-link></span>
-        <span>忘记密码？<router-link to="/register" class="footer-link">立即找回</router-link></span>
+        <span v-if="isLogin">还没有账号？<span class="footer-link" @click="changeForm">前往注册</span></span>
+        <span v-else>已有账号？<span class="footer-link" @click="changeForm">去登录</span></span>
+        <span>忘记密码？<span class="footer-link">立即找回</span></span>
       </div>
     </div>
-
-    <!-- 验证码 -->
-    <touch-verify-code @success="onSuccess" v-if="isShow" @failed="onFailed" class="touch-verify-code"/>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, toRefs, getCurrentInstance, onBeforeMount } from 'vue'
-import TouchVerifyCode from '@/components/code/TouchVerifyCode.vue'
-import { loginForm, rules } from '@/utils/validators'
-import { errorMessage } from '@/utils/message'
-import { successNotification } from '@/utils/notification'
-import { loginApi } from '@/api/user'
-import { useRouter } from 'vue-router'
+import { defineComponent, onMounted, reactive, toRefs, watch } from 'vue'
+import { loginForm, registerUser, rules } from '@/utils/validators'
+import LoginForm from '@/components/loginRegister/LoginForm.vue'
+import RegisterForm from '@/components/loginRegister/RegisterForm.vue'
 
 export default defineComponent({
   name: 'Login',
   components: {
-    TouchVerifyCode,
+    LoginForm,
+    RegisterForm
   },
   setup: function () {
-    let vm: any
-    const router = useRouter()
-
     const state = reactive({
       starCount: 800,   // 星星数量
       distance: 800,    // 间距
-      isShow: false,
-      loading: false
+      isLogin: true
     })
 
     let stars: any[] = []
@@ -69,44 +54,17 @@ export default defineComponent({
       })
     })
 
-    // 获取组件实例
-    onBeforeMount(() => {
-      vm = getCurrentInstance()
-    })
-
-    const login = (formName: string): void => {
-      vm.refs[formName].validate((valid: boolean) => {
-        if (!valid) return
-        state.isShow = true
-        state.loading = true
-      })
-    }
-
-    const onSuccess = async (time: number) => {
-      const { data } = await loginApi(loginForm)
-      if (data.success) {
-        router.push('/')
-        successNotification(data.message)
-        window.sessionStorage.setItem('user', JSON.stringify(data.data.user))
-      }
-      state.isShow = false
-      state.loading = false
-    }
-
-    const onFailed = (): void => {
-      errorMessage("验证失败！")
-      state.isShow = false
-      state.loading = false
+    const changeForm = () => {
+      state.isLogin = !state.isLogin
     }
 
     return {
       ...toRefs(state),
       star,
-      login,
-      onSuccess,
-      onFailed,
       loginForm,
-      rules
+      rules,
+      registerUser,
+      changeForm
     }
   }
 })

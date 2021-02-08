@@ -24,6 +24,7 @@ request.interceptors.request.use((config: AxiosRequestConfig) => {
 request.interceptors.response.use((config: AxiosResponse<any>) => {
   if (!config.data.success) {
     ElMessage.error(config.data.message || '服务器端异常！')
+    window.sessionStorage.clear()
   }
   NProgress.done()
   return config

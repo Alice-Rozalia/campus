@@ -9,6 +9,8 @@ import org.kuro.campus.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 /**
  * @Author: 白鸟亦悲否？
  * @Date: 2021/2/5 22:58
@@ -23,8 +25,7 @@ public class UserController {
 
     @PostMapping("/pub/user/register")
     @ApiOperation(value = "用户注册", notes = "用户注册")
-    public Result register(@RequestBody User user) {
-        userService.register(user);
-        return Result.ok(ResultCode.ADD_SUCCESS);
+    public Result register(@RequestBody @Valid User user) {
+        return userService.register(user);
     }
 }
