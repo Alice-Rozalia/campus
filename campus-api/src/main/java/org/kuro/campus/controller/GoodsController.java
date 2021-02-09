@@ -1,12 +1,15 @@
 package org.kuro.campus.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.kuro.campus.model.entity.Goods;
 import org.kuro.campus.model.response.Result;
+import org.kuro.campus.model.response.ResultCode;
 import org.kuro.campus.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * @Author: 白鸟亦悲否？
@@ -20,4 +23,9 @@ public class GoodsController {
     @Autowired
     private GoodsService goodsService;
 
+    @PostMapping("/pri/goods/publish")
+    @ApiOperation(value = "发布商品", notes = "发布商品")
+    public Result publish(@RequestBody @Valid Goods goods) {
+        return goodsService.publish(goods);
+    }
 }

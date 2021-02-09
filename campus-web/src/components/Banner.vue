@@ -54,10 +54,17 @@ export default defineComponent({
       categories: [],
       actionCategory: {}
     })
+
     const getCategories = async () => {
-      const { data } = await fetchCategoriesApi()
-      if (data.success) {
-        state.categories = data.data.categories
+      const cacheCategories = window.sessionStorage.getItem('categories')
+      if (cacheCategories) {
+        state.categories = JSON.parse(cacheCategories)
+      } else {
+        const { data } = await fetchCategoriesApi()
+        if (data.success) {
+          state.categories = data.data.categories
+          window.sessionStorage.setItem('categories', JSON.stringify(data.data.categories))
+        }
       }
     }
 

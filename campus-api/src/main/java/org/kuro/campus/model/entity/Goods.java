@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 /**
@@ -15,7 +17,7 @@ import java.util.Date;
  * @Date: 2021/2/4 18:00
  */
 @Data
-@ApiModel(value="Goods对象", description="商品表")
+@ApiModel(value = "Goods对象", description = "商品表")
 @Table(name = "tb_goods")
 public class Goods {
 
@@ -25,19 +27,19 @@ public class Goods {
     private Integer id;
 
     @ApiModelProperty(value = "商品名称")
+    @NotBlank(message = "商品名称不能为空！")
     private String name;
 
     @ApiModelProperty(value = "价格")
+    @Digits(integer = 99999, fraction = 2)
     private Double price;
 
     @ApiModelProperty(value = "简介")
+    @NotBlank(message = "简介不能为空！")
     private String introduce;
 
     @ApiModelProperty(value = "发布时间")
     private Date createDate;
-
-    @ApiModelProperty(value = "封面")
-    private String cover;
 
     @ApiModelProperty(value = "图片")
     private String images;
@@ -50,4 +52,10 @@ public class Goods {
 
     @ApiModelProperty(value = "是否下架")
     private Boolean enabled;
+
+    @ApiModelProperty(value = "分类id")
+    private Integer categoryId;
+
+    @ApiModelProperty(value = "用户id")
+    private Integer userId;
 }

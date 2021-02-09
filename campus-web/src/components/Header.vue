@@ -1,8 +1,11 @@
 <template>
   <header>
     <div class="container">
-      <img src="@/assets/logo.jpg" alt="logo" class="logo"/>
-      <div class="search">
+      <router-link to="/">
+        <img src="@/assets/logo.jpg" alt="logo" class="logo"/>
+      </router-link>
+
+      <div class="search" v-if="isIndex">
         <el-input placeholder="显卡RTX3060">
           <template #append>
             <el-button icon="el-icon-search"></el-button>
@@ -11,8 +14,7 @@
       </div>
       <div class="header-right">
         <div v-if="!isLogin">
-          <router-link to="/login">登录</router-link>
-          <router-link to="/register" class="right-menu-item">注册</router-link>
+          <router-link to="/login" class="login-link-text">登录 | 注册</router-link>
         </div>
         <div v-else class="login-user-info">
           <span>{{loginUser.username}}</span>
@@ -21,6 +23,8 @@
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item>个人中心</el-dropdown-item>
+                <el-dropdown-item>消息</el-dropdown-item>
+                <el-dropdown-item><router-link to="/release_goods">发布商品</router-link></el-dropdown-item>
                 <el-dropdown-item>账号设置</el-dropdown-item>
                 <el-dropdown-item divided @click="logout">退出登录</el-dropdown-item>
               </el-dropdown-menu>
@@ -33,7 +37,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, ref } from 'vue'
+import { defineComponent, onBeforeMount, ref, watch, nextTick } from 'vue'
+import { useRoute } from 'vue-router'
 import { logoutApi } from '@/api/user'
 import { successMessage } from '@/utils/message'
 
@@ -42,6 +47,17 @@ export default defineComponent({
   setup() {
     const isLogin = ref(false)
     const loginUser = ref({})
+    const isIndex = ref(true)
+    const route = useRoute()
+
+    watch(
+      route,
+      async ({ path }: any, prevRoute: unknown): Promise<void> => {
+        await nextTick()
+        path !== '/' ? isIndex.value = false : isIndex.value = true
+      },
+      { immediate: true }
+    )
 
     onBeforeMount(() => {
       const user = window.sessionStorage.getItem('user')
@@ -58,12 +74,14 @@ export default defineComponent({
       if (data.success) {
         successMessage(data.message)
         window.sessionStorage.clear()
+        isLogin.value = false
       }
     }
 
     return {
       isLogin,
       loginUser,
+      isIndex,
       logout
     }
   }

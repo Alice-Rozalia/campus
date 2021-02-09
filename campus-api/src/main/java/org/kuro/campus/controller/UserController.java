@@ -4,7 +4,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.kuro.campus.model.entity.User;
 import org.kuro.campus.model.response.Result;
-import org.kuro.campus.model.response.ResultCode;
 import org.kuro.campus.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

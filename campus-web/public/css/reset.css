@@ -46,3 +46,10 @@ a {
     text-decoration: none;
     color: #333;
 }
+
+html,
+body,
+#app {
+    width: 100%;
+    height: 100%;
+}
