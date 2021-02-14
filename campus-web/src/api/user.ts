@@ -2,8 +2,9 @@ import request from '@/utils/request'
 
 export const loginApi = ((data: any) => {
   return request({
-    url: `/pub/doLogin?username=${data.username}&password=${data.password}`,
-    method: 'post'
+    url: '/pub/user/login',
+    method: 'post',
+    data
   })
 })
 

@@ -50,7 +50,8 @@ export default defineComponent({
           if (data.success) {
             router.push('/')
             successNotification(data.message)
-            window.sessionStorage.setItem('user', JSON.stringify(data.data.user))
+            window.sessionStorage.setItem('user', JSON.stringify(data.data.user.user))
+            window.sessionStorage.setItem('token', JSON.stringify(data.data.token.credentials))
             loading.value = false
           } else {
             loading.value = false

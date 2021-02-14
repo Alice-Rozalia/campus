@@ -5,7 +5,7 @@ import NProgress from 'nprogress'
 const isPrd: boolean = process.env.NODE_ENV === 'production'
 
 const request = axios.create({
-  baseURL: isPrd ? '' : 'http://localhost:8080/api',
+  baseURL: isPrd ? '' : 'http://localhost:8360/api/v1',
   timeout: 5000,
   headers: {
     Accept: 'application/json, text/plain, */*',
@@ -16,6 +16,10 @@ const request = axios.create({
 
 request.interceptors.request.use((config: AxiosRequestConfig) => {
   NProgress.start()
+  const token = window.sessionStorage.getItem('token')
+  if (token) {
+    config.headers.Authorization = token
+  }
   return config
 }, error => {
   return Promise.reject(error)

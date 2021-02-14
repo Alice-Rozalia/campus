@@ -12,8 +12,16 @@
     </select>
 
     <select id="getRolesById" resultType="org.kuro.campus.model.entity.Role">
-        select `id`, `name`, `describe`
-        from tb_role
-        where id in (select `role_id` from tb_user_role where user_id = #{id})
+        SELECT r.`name`, r.`id`, r.`status` FROM tb_role r
+        LEFT JOIN tb_user_role ur ON r.id = ur.role_id
+        LEFT JOIN tb_user u ON u.id = ur.user_id
+        WHERE u.id = #{id}
+    </select>
+
+    <select id="findPermissionByRoles" resultType="org.kuro.campus.model.entity.Permission">
+        SELECT p.`id`, p.`perms`, p.`name`, p.`status` FROM tb_permission p
+        LEFT JOIN tb_permission_role pr ON p.`id` = pr.permission_id
+        LEFT JOIN tb_role r ON r.`id` = pr.role_id
+        WHERE r.id = #{roleId}
     </select>
 </mapper>

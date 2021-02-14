@@ -8,6 +8,7 @@ import org.kuro.campus.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
@@ -26,5 +27,11 @@ public class UserController {
     @ApiOperation(value = "用户注册", notes = "用户注册")
     public Result register(@RequestBody @Valid User user) {
         return userService.register(user);
+    }
+
+    @PostMapping("/pub/user/login")
+    @ApiOperation(value = "登录授权", notes = "登录授权接口，登录成功返回token令牌")
+    public Result login(@RequestBody @Valid User user, HttpServletRequest request) {
+        return this.userService.login(user, request);
     }
 }

@@ -23,7 +23,6 @@
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item>个人中心</el-dropdown-item>
-                <el-dropdown-item>消息</el-dropdown-item>
                 <el-dropdown-item><router-link to="/release_goods">发布商品</router-link></el-dropdown-item>
                 <el-dropdown-item>账号设置</el-dropdown-item>
                 <el-dropdown-item divided @click="logout">退出登录</el-dropdown-item>

@@ -25,7 +25,6 @@ public class GoodsServiceImpl implements GoodsService {
 
     /**
      * 发布商品
-     *
      * @param goods
      * @return
      */

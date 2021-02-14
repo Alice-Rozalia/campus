@@ -41,9 +41,6 @@ public class Goods {
     @ApiModelProperty(value = "发布时间")
     private Date createDate;
 
-    @ApiModelProperty(value = "图片")
-    private String images;
-
     @ApiModelProperty(value = "浏览")
     private Integer look;
 
@@ -58,4 +55,7 @@ public class Goods {
 
     @ApiModelProperty(value = "用户id")
     private Integer userId;
+
+    @ApiModelProperty(value = "图片")
+    private String images;
 }

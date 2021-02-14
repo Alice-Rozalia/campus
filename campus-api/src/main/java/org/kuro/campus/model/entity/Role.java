@@ -23,9 +23,9 @@ public class Role {
     @ApiModelProperty(value = "主键id")
     private Integer id;
 
-    @ApiModelProperty(value = "角色标识")
+    @ApiModelProperty(value = "角色名称")
     private String name;
 
-    @ApiModelProperty(value = "角色中文名")
-    private String describe;
+    @ApiModelProperty(value = "是否可用")
+    private Boolean status;
 }

@@ -20,11 +20,9 @@ public enum ResultCode implements CustomizeResultCode {
 
     /* 用户错误 */
     USER_NOT_LOGIN(2001, "尚未登录，请登录！"),
-    USER_ACCOUNT_EXPIRED(2002, "账号已过期！"),
+    USER_TOKEN_EXPIRED(2002, "令牌已过期，请重新登录！"),
     USER_CREDENTIALS_ERROR(2003, "账号或密码错误！"),
-    USER_CREDENTIALS_EXPIRED(2004, "密码过期！"),
     USER_ACCOUNT_DISABLE(2005, "账号不可用！"),
-    USER_ACCOUNT_LOCKED(2006, "账号被锁定！"),
     USER_ACCOUNT_NOT_EXIST(2007, "账号不存在！"),
     USER_ACCOUNT_ALREADY_EXIST(2008, "账号已存在！"),
     USER_ACCOUNT_USE_BY_OTHERS(2009, "账号在别处登录！"),

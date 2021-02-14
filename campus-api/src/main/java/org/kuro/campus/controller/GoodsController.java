@@ -2,9 +2,9 @@ package org.kuro.campus.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.kuro.campus.model.entity.Goods;
 import org.kuro.campus.model.response.Result;
-import org.kuro.campus.model.response.ResultCode;
 import org.kuro.campus.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +23,7 @@ public class GoodsController {
     @Autowired
     private GoodsService goodsService;
 
+    @RequiresPermissions({"goods:publish"})
     @PostMapping("/pri/goods/publish")
     @ApiOperation(value = "发布商品", notes = "发布商品")
     public Result publish(@RequestBody @Valid Goods goods) {

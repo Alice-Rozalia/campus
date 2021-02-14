@@ -24,14 +24,14 @@ public class Permission {
     @ApiModelProperty(value = "主键id")
     private Integer id;
 
-    @ApiModelProperty(value = "请求路径")
-    private String url;
+    @ApiModelProperty(value = "权限标识")
+    private String perms;
 
     @ApiModelProperty(value = "权限名称")
     private String name;
 
     @ApiModelProperty(value = "是否可用")
-    private Boolean enabled;
+    private Boolean status;
 
     @ApiModelProperty(value = "访问权限需要的角色")
     private List<Role> roles;
