@@ -89,11 +89,6 @@ public class UserRealm extends AuthorizingRealm {
         if (JWTUtils.isExpire(token)) {
             throw new AuthenticationException(ResultCode.USER_TOKEN_EXPIRED.getMessage());
         }
-
-        if (!JWTUtils.verify(token, username, userBean.getPassword())) {
-            throw new CredentialsException(ResultCode.USER_CREDENTIALS_ERROR.getMessage());
-        }
-
         if (!userBean.getEnabled()) {
             throw new LockedAccountException(ResultCode.USER_ACCOUNT_DISABLE.getMessage());
         }

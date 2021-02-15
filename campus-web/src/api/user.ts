@@ -15,10 +15,3 @@ export const registerApi = ((data: any) => {
     data: data
   })
 })
-
-export const logoutApi = (() => {
-  return request({
-    url: '/pri/logout',
-    method: 'get'
-  })
-})

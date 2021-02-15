@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
             SecurityUtils.getSubject().login(jwtToken);
             ActiveUser activeUser = (ActiveUser) SecurityUtils.getSubject().getPrincipal();
             Map<String, Object> map = new HashMap<>();
-            map.put("token", jwtToken);
+            map.put("token", token);
             map.put("user", activeUser);
             return Result.ok(ResultCode.LOGIN_SUCCESS).data(map);
         } catch (AuthenticationException e) {

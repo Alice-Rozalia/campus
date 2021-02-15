@@ -1,5 +1,7 @@
 package org.kuro.campus.utils;
 
+import org.apache.shiro.SecurityUtils;
+import org.kuro.campus.model.bean.ActiveUser;
 import org.kuro.campus.model.entity.User;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -10,6 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public class CurrentUser {
 
     public static User getCurrentUser() {
-        return ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        return ((ActiveUser) SecurityUtils.getSubject().getPrincipal()).getUser();
     }
 }

@@ -23,7 +23,9 @@
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item>个人中心</el-dropdown-item>
-                <el-dropdown-item><router-link to="/release_goods">发布商品</router-link></el-dropdown-item>
+                <el-dropdown-item>
+                  <router-link to="/release_goods">发布商品</router-link>
+                </el-dropdown-item>
                 <el-dropdown-item>账号设置</el-dropdown-item>
                 <el-dropdown-item divided @click="logout">退出登录</el-dropdown-item>
               </el-dropdown-menu>
@@ -38,7 +40,6 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, ref, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
-import { logoutApi } from '@/api/user'
 import { successMessage } from '@/utils/message'
 
 export default defineComponent({
@@ -69,12 +70,9 @@ export default defineComponent({
     })
 
     const logout = async () => {
-      const { data } = await logoutApi()
-      if (data.success) {
-        successMessage(data.message)
-        window.sessionStorage.clear()
-        isLogin.value = false
-      }
+      window.sessionStorage.removeItem('user')
+      window.sessionStorage.removeItem('token')
+      isLogin.value = false
     }
 
     return {
