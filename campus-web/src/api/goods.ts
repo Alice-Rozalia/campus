@@ -8,3 +8,11 @@ export const publishGoodsApi = ((data: any) => {
     data: data._rawValue
   })
 })
+
+export const fetchIndexGoodsApi = ((query: object) => {
+  return request({
+    url: '/pub/goods/index',
+    method: 'get',
+    params: query
+  })
+})

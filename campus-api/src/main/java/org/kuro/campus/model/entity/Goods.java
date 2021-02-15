@@ -1,5 +1,6 @@
 package org.kuro.campus.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -11,6 +12,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author: 白鸟亦悲否？
@@ -39,6 +41,7 @@ public class Goods {
     private String introduce;
 
     @ApiModelProperty(value = "发布时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Shanghai")
     private Date createDate;
 
     @ApiModelProperty(value = "浏览")
@@ -55,7 +58,4 @@ public class Goods {
 
     @ApiModelProperty(value = "用户id")
     private Integer userId;
-
-    @ApiModelProperty(value = "图片")
-    private String images;
 }

@@ -29,4 +29,13 @@ public class GoodsController {
     public Result publish(@RequestBody @Valid Goods goods) {
         return goodsService.publish(goods);
     }
+
+    @GetMapping("/pub/goods/index")
+    @ApiOperation(value = "首页商品", notes = "获取未下架的商品")
+    public Result indexGoods(
+            @RequestParam(value = "page", defaultValue = "1") Integer page,
+            @RequestParam(value = "limit", defaultValue = "8") Integer limit
+    ) {
+        return goodsService.indexGoods(page, limit);
+    }
 }

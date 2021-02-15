@@ -2,6 +2,7 @@ package org.kuro.campus.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.kuro.campus.model.response.Result;
 import org.kuro.campus.service.AliOssService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ public class AliOssController {
     @Autowired
     private AliOssService aliOssService;
 
+    @RequiresPermissions({"upload:upload"})
     @ApiOperation(value = "上传图片", notes = "上传图片文件")
     @PostMapping("/pri/alioss/upload")
     public Result uploadImgFile(MultipartFile file) {
@@ -23,6 +25,7 @@ public class AliOssController {
         return Result.ok().data("url", s);
     }
 
+    @RequiresPermissions({"upload:delete"})
     @ApiOperation(value = "删除图片", notes = "根据图片名删除图片")
     @DeleteMapping("/pri/alioss/delete")
     public Result deleteImgFile(String file) {

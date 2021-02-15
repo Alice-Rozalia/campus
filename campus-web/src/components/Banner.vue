@@ -14,7 +14,7 @@
         <el-carousel height="360px">
           <el-carousel-item v-for="item in 3" :key="item">
             <img src="https://kuro-campus.oss-cn-shenzhen.aliyuncs.com/swiper/majo_bg_s01up01_03.png"
-                 style="width: 100%;"/>
+                 style="width: 100%;" alt="swiper"/>
           </el-carousel-item>
         </el-carousel>
       </div>
@@ -23,7 +23,7 @@
           <el-tag>所有二手商品</el-tag>
         </div>
         <div class="order-item">
-          <div class="active-order">时间<i class="el-icon-top"></i></div>
+          <div class="active-order">时间</div>
           <div class="order-item-price">价格</div>
           <div>浏览量</div>
         </div>

@@ -2,16 +2,21 @@ package org.kuro.campus.service.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.kuro.campus.mapper.GoodsMapper;
+import org.kuro.campus.mapper.ImageMapper;
 import org.kuro.campus.model.entity.Goods;
+import org.kuro.campus.model.entity.Image;
 import org.kuro.campus.model.entity.User;
+import org.kuro.campus.model.page.PageResult;
 import org.kuro.campus.model.response.Result;
 import org.kuro.campus.model.response.ResultCode;
+import org.kuro.campus.model.vo.GoodsVo;
 import org.kuro.campus.service.GoodsService;
 import org.kuro.campus.utils.CurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author: 白鸟亦悲否？
@@ -22,6 +27,9 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Autowired
     private GoodsMapper goodsMapper;
+
+    @Autowired
+    private ImageMapper imageMapper;
 
     /**
      * 发布商品
@@ -37,6 +45,24 @@ public class GoodsServiceImpl implements GoodsService {
         goods.setCreateDate(new Date());
         goods.setUserId(user.getId());
         goodsMapper.insertSelective(goods);
-        return Result.ok(ResultCode.GOODS_PUBLISH_SUCCESS);
+        return Result.ok(ResultCode.GOODS_PUBLISH_SUCCESS).data("id", goods.getId());
+    }
+
+    /**
+     * 首页商品
+     *
+     * @return
+     */
+    @Override
+    public Result indexGoods(Integer page, Integer limit) {
+        page = (page - 1) * limit;
+        List<GoodsVo> goods = goodsMapper.indexGoods(page, limit);
+        Integer total = goodsMapper.goodsCount();
+        for (GoodsVo good : goods) {
+            Image image = imageMapper.findOneImageByGoodsId(good.getId());
+            good.setCover(image.getUrl());
+        }
+        PageResult<GoodsVo> result = new PageResult<>(total, goods);
+        return Result.ok().data("goods", result);
     }
 }

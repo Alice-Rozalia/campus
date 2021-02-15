@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.kuro.campus.mapper.GoodsMapper">
+
+    <sql id="selectFields">
+        `id`,`name`,`price`,`introduce`,`create_date`,`look`,`original`,`enabled`,`category_id`,`user_id`
+    </sql>
+
+    <select id="indexGoods" resultType="org.kuro.campus.model.vo.GoodsVo">
+        SELECT g.id, g.name, g.price, g.introduce, g.create_date, g.look, c.`name` as category
+        FROM tb_goods g
+        LEFT JOIN tb_category c ON g.category_id = c.id
+        WHERE g.enabled = 1
+        ORDER BY g.create_date DESC
+        LIMIT #{page}, #{limit}
+    </select>
+
+    <select id="goodsCount" resultType="java.lang.Integer">
+        SELECT count(*) FROM tb_goods
+    </select>
+</mapper>

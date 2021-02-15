@@ -40,35 +40,24 @@
 
           <el-form-item label="图片">
             <el-alert
-              title="单张图片上传不能＞2M，全部图片（多张/单张）的总大小不能＞10M"
+              title="单张图片上传不能＞2M，全部图片（多张/单张）的总大小不能＞10M，最多上传5张图片"
               type="info"
               show-icon
               :closable="false"
             >
             </el-alert>
             <el-upload
-              action="#"
-              list-type="picture-card"
-              :auto-upload="false">
-              <template #default>
-                <i class="el-icon-plus"></i>
-              </template>
-              <template #file="{file}">
-                <div>
-                  <img class="el-upload-list__item-thumbnail" src="file.url" alt=""/>
-                  <span>
-                    <span>
-                      <i class="el-icon-zoom-in"></i>
-                    </span>
-                    <span v-if="!disabled">
-                      <i class="el-icon-download"></i>
-                    </span>
-                    <span v-if="!disabled">
-                      <i class="el-icon-delete"></i>
-                    </span>
-                  </span>
-                </div>
-              </template>
+              action="http://localhost:8360/api/v1/pri/alioss/upload"
+              list-type="picture"
+              :file-list="fileList"
+              ref="upload"
+              :limit="5"
+              :headers="headerObj"
+              :on-error="uploadError"
+              :on-success="uploadSuccess"
+              :auto-upload="false"
+            >
+              <el-button size="mini" type="primary">点击上传</el-button>
             </el-upload>
           </el-form-item>
 
@@ -85,9 +74,10 @@
 import { defineComponent, onMounted, reactive, toRefs, getCurrentInstance, onBeforeMount } from 'vue'
 import { fetchCategoriesApi } from '@/api/category'
 import { goodsForm, goodsRules } from '@/utils/goodsValidators'
-import { successMessage } from '@/utils/message'
+import { successMessage, errorMessage } from '@/utils/message'
 import { publishGoodsApi } from '@/api/goods'
 import { useRouter } from 'vue-router'
+import { keepImageApi } from '@/api/image'
 import Header from '@/components/Header.vue'
 
 export default defineComponent({
@@ -105,7 +95,14 @@ export default defineComponent({
         expandTrigger: 'hover',
         value: 'id',
         label: 'name'
-      }
+      },
+      fileList: [],
+      headerObj: {
+        Authorization: window.sessionStorage.getItem('token')
+      },
+      dialogVisible: false,
+      preview: '',
+      imageForm: { url: '', entityId: '' }
     })
 
     const getCategories = async () => {
@@ -135,17 +132,33 @@ export default defineComponent({
         if (!valid) return
         const { data } = await publishGoodsApi(goodsForm)
         if (data.success) {
-          router.push('/')
+          state.imageForm.entityId = data.data.id
           successMessage(data.message)
+          vm.refs['upload'].submit()
+          router.push('/')
         }
       })
+    }
+
+    const uploadSuccess = async (response: any) => {
+      if (response.success) {
+        successMessage('图片上传成功！')
+        state.imageForm.url = response.data.url
+        const { data } = await keepImageApi(state.imageForm)
+      }
+    }
+
+    const uploadError = (err: any) => {
+      errorMessage('图片上传失败！' + err)
     }
 
     return {
       ...toRefs(state),
       goodsForm,
       goodsRules,
-      publish
+      publish,
+      uploadSuccess,
+      uploadError
     }
   }
 })

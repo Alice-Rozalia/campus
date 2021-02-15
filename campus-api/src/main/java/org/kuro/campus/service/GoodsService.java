@@ -15,4 +15,10 @@ public interface GoodsService {
      * @return
      */
     Result publish(Goods goods);
+
+    /**
+     * 首页商品
+     * @return
+     */
+    Result indexGoods(Integer page, Integer limit);
 }
