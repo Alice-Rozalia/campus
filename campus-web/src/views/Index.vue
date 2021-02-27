@@ -8,7 +8,7 @@
       <div class="goods" v-if="goods.length">
         <water-fall width="290px" gap="10px" :delay="true" :data="goods">
           <template #default="item">
-            <div class="card">
+            <div class="card" @click="goDetailPage(item)">
               <img :src="item.cover" alt="商品图片"/>
               <div class="card-info">
                 <p class="goods-name">{{item.name}}</p>
@@ -49,6 +49,7 @@ import { fetchIndexGoodsApi } from '@/api/goods'
 import Header from '@/components/Header.vue'
 import Banner from '@/components/Banner.vue'
 import WaterFall from 'kuan-vue-waterfall'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'Index',
@@ -63,6 +64,8 @@ export default defineComponent({
       total: 0,
       query: { page: 1, limit: 8 }
     })
+
+    const router = useRouter()
 
     const getIndexGoods = async () => {
       const { data } = await fetchIndexGoodsApi(state.query)
@@ -81,9 +84,14 @@ export default defineComponent({
       getIndexGoods()
     }
 
+    const goDetailPage = (item: any) => {
+      router.push('/detail/' + item.id)
+    }
+
     return {
       ...toRefs(state),
-      currentPageChange
+      currentPageChange,
+      goDetailPage
     }
   }
 })

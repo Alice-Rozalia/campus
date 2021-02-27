@@ -38,4 +38,10 @@ public class GoodsController {
     ) {
         return goodsService.indexGoods(page, limit);
     }
+
+    @GetMapping("/pub/goods/{goodsId}")
+    @ApiOperation(value = "商品详情", notes = "根据id查找商品详情")
+    public Result goodsDetail(@PathVariable("goodsId") Integer goodsId) {
+        return goodsService.goodsDetail(goodsId);
+    }
 }

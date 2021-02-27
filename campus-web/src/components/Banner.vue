@@ -1,7 +1,7 @@
 <template>
   <div class="banner">
     <!-- 左侧菜单-->
-    <div class="menu-content">
+    <div class="menu-content" ref="categoryRef">
       <div class="menu-item" v-for="item in categories" :key="item.id" @mouseenter="showCategoryDetail(item)">
         <span>{{item.name}}</span>
         <i class="el-icon-caret-right"></i>
@@ -29,12 +29,12 @@
         </div>
       </div>
 
-      <div class="menu-detail" v-show="JSON.stringify(actionCategory) !== '{}'" @mouseleave="hideCategoryDetail()">
+      <div ref="categoryRef" class="menu-detail" v-show="JSON.stringify(actionCategory) !== '{}'">
         <el-divider>{{actionCategory.name}}</el-divider>
 
         <div class="menu-detail-list-content">
           <div class="menu-detail-items" v-for="val in actionCategory.children" :key="val.id">
-            <img :src="val.image">
+            <img :src="val.image" alt="swiper">
             <p>{{val.name}}</p>
           </div>
         </div>
@@ -44,12 +44,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, toRefs } from 'vue'
+import { defineComponent, onMounted, reactive, toRefs, onUnmounted, ref } from 'vue'
 import { fetchCategoriesApi } from '@/api/category'
 
 export default defineComponent({
   name: 'Banner',
   setup() {
+    const categoryRef = ref<null | HTMLElement>(null)
     const state = reactive({
       categories: [],
       actionCategory: {}
@@ -72,18 +73,27 @@ export default defineComponent({
       state.actionCategory = item
     }
 
-    const hideCategoryDetail = () => {
-      state.actionCategory = {}
+    const handler = (e: MouseEvent) => {
+      if (categoryRef.value) {
+        if (!categoryRef.value.contains(e.target as HTMLElement) && state.actionCategory !== {}) {
+          state.actionCategory = {}
+        }
+      }
     }
 
     onMounted(() => {
+      document.addEventListener('mouseover', handler)
       getCategories()
+    })
+
+    onUnmounted(() => {
+      document.removeEventListener('mouseover', handler)
     })
 
     return {
       ...toRefs(state),
       showCategoryDetail,
-      hideCategoryDetail
+      categoryRef
     }
   }
 })

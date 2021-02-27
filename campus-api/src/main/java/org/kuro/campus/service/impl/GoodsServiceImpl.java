@@ -9,6 +9,7 @@ import org.kuro.campus.model.entity.User;
 import org.kuro.campus.model.page.PageResult;
 import org.kuro.campus.model.response.Result;
 import org.kuro.campus.model.response.ResultCode;
+import org.kuro.campus.model.vo.GoodsDetailVo;
 import org.kuro.campus.model.vo.GoodsVo;
 import org.kuro.campus.service.GoodsService;
 import org.kuro.campus.utils.CurrentUser;
@@ -64,5 +65,16 @@ public class GoodsServiceImpl implements GoodsService {
         }
         PageResult<GoodsVo> result = new PageResult<>(total, goods);
         return Result.ok().data("goods", result);
+    }
+
+    /**
+     * 商品详情
+     * @param goodsId
+     * @return
+     */
+    @Override
+    public Result goodsDetail(Integer goodsId) {
+        GoodsDetailVo vo = goodsMapper.goodsDetailById(goodsId);
+        return Result.ok().data("goods", vo);
     }
 }

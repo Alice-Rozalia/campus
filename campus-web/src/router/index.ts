@@ -17,6 +17,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/Release.vue')
   },
   {
+    path: '/detail/:id',
+    name: 'Detail',
+    component: () => import('@/views/Detail.vue')
+  },
+  {
     path: '/:catchAll(.*)',
     name: '/404',
     component: () => import('@/views/404.vue')

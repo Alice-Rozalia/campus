@@ -6,6 +6,24 @@
         `id`,`name`,`price`,`introduce`,`create_date`,`look`,`original`,`enabled`,`category_id`,`user_id`
     </sql>
 
+    <resultMap id="goodsDetail" type="org.kuro.campus.model.vo.GoodsDetailVo">
+        <id property="id" column="id" />
+        <result property="name" column="name" />
+        <result property="price" column="price" />
+        <result property="introduce" column="introduce" />
+        <result property="createDate" column="create_date" />
+        <result property="original" column="original" />
+        <result property="userId" column="user_id" />
+        <result property="category" column="category" />
+        <result property="username" column="username" />
+        <result property="avatar" column="avatar" />
+        <result property="address" column="address" />
+        <collection property="images" ofType="org.kuro.campus.model.entity.Image">
+            <id property="id" column="iid" />
+            <result property="url" column="url" />
+        </collection>
+    </resultMap>
+
     <select id="indexGoods" resultType="org.kuro.campus.model.vo.GoodsVo">
         SELECT g.id, g.name, g.price, g.introduce, g.create_date, g.look, c.`name` as category
         FROM tb_goods g
@@ -17,5 +35,15 @@
 
     <select id="goodsCount" resultType="java.lang.Integer">
         SELECT count(*) FROM tb_goods
+    </select>
+
+    <select id="goodsDetailById" resultMap="goodsDetail">
+        SELECT g.id, g.name, g.price, g.introduce, g.create_date, g.original, g.user_id,
+               c.`name` as category, u.username,u.avatar,u.address, i.id as iid, i.url
+        FROM tb_goods g
+        LEFT JOIN tb_category c ON g.category_id = c.id
+        LEFT JOIN tb_user u ON u.id = g.user_id
+        LEFT JOIN tb_image i ON i.entity_id = g.id
+        WHERE g.id = #{id}
     </select>
 </mapper>

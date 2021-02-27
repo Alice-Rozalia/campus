@@ -21,4 +21,11 @@ public interface GoodsService {
      * @return
      */
     Result indexGoods(Integer page, Integer limit);
+
+    /**
+     * 商品详情
+     * @param goodsId
+     * @return
+     */
+    Result goodsDetail(Integer goodsId);
 }

@@ -16,3 +16,10 @@ export const fetchIndexGoodsApi = ((query: object) => {
     params: query
   })
 })
+
+export const fetchGoodsDetailByIdApi = ((id: number) => {
+  return request({
+    url: '/pub/goods/' + id,
+    method: 'get'
+  })
+})
