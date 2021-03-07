@@ -43,7 +43,7 @@ export default defineComponent({
     })
 
     const login = (formName: string): void => {
-      vm.refs[formName].validate(async (valid: boolean) => {
+      vm.refs[formName].validate((valid: boolean) => {
         if (!valid) return
         loading.value = true
         loginApi(props.loginForm).then(({ data }: any) => {

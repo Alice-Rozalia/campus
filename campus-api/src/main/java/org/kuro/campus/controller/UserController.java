@@ -32,6 +32,12 @@ public class UserController {
     @PostMapping("/pub/user/login")
     @ApiOperation(value = "登录授权", notes = "登录授权接口，登录成功返回token令牌")
     public Result login(@RequestBody @Valid User user, HttpServletRequest request) {
-        return this.userService.login(user, request);
+        return userService.login(user, request);
+    }
+
+    @PostMapping("/pub/user/admin_login")
+    @ApiOperation(value = "后台登录", notes = "后台登录接口，根据用户的账号和角色进行判断")
+    public Result adminLogin(@RequestBody @Valid User user, HttpServletRequest request) {
+        return userService.adminLogin(user, request);
     }
 }

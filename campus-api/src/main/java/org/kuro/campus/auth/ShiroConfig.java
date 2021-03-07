@@ -57,8 +57,6 @@ public class ShiroConfig /* implements ApplicationContextAware */ {
         filterRuleMap.put("/swagger-resources", "anon");
         // 开放公共接口
         filterRuleMap.put("/api/v1/pub/**", "anon");
-        // sql监控
-        filterRuleMap.put("/druid/**", "anon");
         factoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return factoryBean;
     }

@@ -19,10 +19,17 @@
         <div v-else class="login-user-info">
           <span>{{loginUser.username}}</span>
           <el-dropdown>
-            <el-avatar class="right-menu-item" :size="50" :src="loginUser.avatar"></el-avatar>
+            <el-badge is-dot type="danger">
+              <el-avatar class="right-menu-item" :size="50" :src="loginUser.avatar"></el-avatar>
+            </el-badge>
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item>个人中心</el-dropdown-item>
+                <el-badge :max="99" :value="5" type="danger">
+                  <el-dropdown-item>
+                    <router-link to="/message">消息中心</router-link>
+                  </el-dropdown-item>
+                </el-badge>
                 <el-dropdown-item>
                   <router-link to="/release_goods">发布商品</router-link>
                 </el-dropdown-item>
@@ -40,7 +47,6 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, ref, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
-import { successMessage } from '@/utils/message'
 
 export default defineComponent({
   name: 'Header',

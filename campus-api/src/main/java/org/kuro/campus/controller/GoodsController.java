@@ -5,7 +5,10 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.kuro.campus.model.entity.Goods;
 import org.kuro.campus.model.response.Result;
+import org.kuro.campus.model.vo.GoodsDetailVo;
+import org.kuro.campus.service.CommentService;
 import org.kuro.campus.service.GoodsService;
+import org.kuro.campus.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +45,7 @@ public class GoodsController {
     @GetMapping("/pub/goods/{goodsId}")
     @ApiOperation(value = "商品详情", notes = "根据id查找商品详情")
     public Result goodsDetail(@PathVariable("goodsId") Integer goodsId) {
-        return goodsService.goodsDetail(goodsId);
+        GoodsDetailVo vo = goodsService.goodsDetail(goodsId);
+        return Result.ok().data("goods", vo);
     }
 }

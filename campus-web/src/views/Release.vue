@@ -75,6 +75,7 @@ import { defineComponent, onMounted, reactive, toRefs, getCurrentInstance, onBef
 import { fetchCategoriesApi } from '@/api/category'
 import { goodsForm, goodsRules } from '@/utils/goodsValidators'
 import { successMessage, errorMessage } from '@/utils/message'
+import { warningNotification } from '@/utils/notification'
 import { publishGoodsApi } from '@/api/goods'
 import { useRouter } from 'vue-router'
 import { keepImageApi } from '@/api/image'
@@ -130,6 +131,8 @@ export default defineComponent({
     const publish = (formName: string): void => {
       vm.refs[formName].validate(async (valid: boolean) => {
         if (!valid) return
+        const token = window.sessionStorage.getItem('token')
+        if (!token) return warningNotification('尚未登录，请先登录！')
         const { data } = await publishGoodsApi(goodsForm)
         if (data.success) {
           state.imageForm.entityId = data.data.id

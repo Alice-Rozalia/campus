@@ -18,6 +18,8 @@ import org.kuro.campus.utils.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,11 +43,10 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 注册
-     *
      * @param user
      * @return
      */
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
     @Override
     public Result register(User user) {
         User checkUsername = userMapper.loadUserByUsername(user.getUsername());
@@ -121,6 +122,42 @@ public class UserServiceImpl implements UserService {
         } catch (AuthenticationException e) {
             throw new ServiceException(e.getMessage());
         }
+    }
+
+    @Override
+    public User findUserById(Integer id) {
+        return userMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public Result adminLogin(User user, HttpServletRequest request) {
+        User userByUsername = userMapper.loadUserByUsername(user.getUsername());
+        if (userByUsername == null) {
+            return Result.error(ResultCode.USER_CREDENTIALS_ERROR);
+        }
+        boolean result = passwordEncoder.matches(user.getPassword(), userByUsername.getPassword());
+        if (!result) {
+            return Result.error(ResultCode.USER_CREDENTIALS_ERROR);
+        }
+        // 获取用户角色
+        List<Role> roles = userMapper.getRolesById(userByUsername.getId());
+        for (Role role : roles) {
+            if (role.getId() == 1) {
+                String token = JWTUtils.sign(userByUsername.getUsername(), userByUsername.getPassword());
+                JWTToken jwtToken = new JWTToken(token);
+                try {
+                    SecurityUtils.getSubject().login(jwtToken);
+                    ActiveUser activeUser = (ActiveUser) SecurityUtils.getSubject().getPrincipal();
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("token", token);
+                    map.put("user", activeUser);
+                    return Result.ok(ResultCode.LOGIN_SUCCESS).data(map);
+                } catch (AuthenticationException e) {
+                    throw new ServiceException(e.getMessage());
+                }
+            }
+        }
+        return Result.error(ResultCode.USER_CREDENTIALS_ERROR);
     }
 
     // 随机头像

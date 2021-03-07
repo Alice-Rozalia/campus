@@ -2,6 +2,7 @@ package org.kuro.campus.service;
 
 import org.kuro.campus.model.entity.Goods;
 import org.kuro.campus.model.response.Result;
+import org.kuro.campus.model.vo.GoodsDetailVo;
 
 /**
  * @Author: 白鸟亦悲否？
@@ -27,5 +28,5 @@ public interface GoodsService {
      * @param goodsId
      * @return
      */
-    Result goodsDetail(Integer goodsId);
+    GoodsDetailVo goodsDetail(Integer goodsId);
 }

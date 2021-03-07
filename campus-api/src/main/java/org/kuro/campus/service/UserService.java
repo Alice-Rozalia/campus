@@ -43,4 +43,8 @@ public interface UserService {
     List<Permission> findPermissionByRoles(List<Role> roles);
 
     Result login(User user, HttpServletRequest request);
+
+    User findUserById(Integer id);
+
+    Result adminLogin(User user, HttpServletRequest request);
 }

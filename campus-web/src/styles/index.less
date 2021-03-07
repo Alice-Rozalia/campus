@@ -10,19 +10,149 @@
   .goods {
     padding: 20px 0 15px;
 
+    .goods-list {
+      display: flex;
+      justify-content: space-between;
+
+      > div {
+        width: 290px;
+      }
+    }
+
     .card {
+      position: relative;
       background-color: white;
       border-radius: 3px;
       word-break: break-all;
       overflow: hidden;
       cursor: pointer;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+
+      &:hover {
+        &::before {
+          width: 100%;
+          height: 2px;
+        }
+
+        .di {
+          &::before {
+            width: 290px;
+            height: 2px;
+          }
+
+          &::after {
+            height: 600px;
+            width: 2px;
+          }
+        }
+
+        &::after {
+          height: 100%;
+          width: 2px;
+        }
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        display: block;
+        pointer-events: none;
+        left: 0;
+        top: 0;
+        width: 4px;
+        height: 0;
+        z-index: 1;
+        background: -moz-linear-gradient(top, #e66ccb 0%, #f0f300 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #e66ccb), color-stop(100%, #f0f300));
+        background: -webkit-linear-gradient(top, #e66ccb 0%, #f0f300 100%);
+        background: -o-linear-gradient(top, #e66ccb 0%, #f0f300 100%);
+        background: -ms-linear-gradient(top, #e66ccb 0%, #f0f300 100%);
+        background: linear-gradient(to bottom, #e66ccb 0%, #f0f300 100%);
+        -webkit-transition: all 0.3s ease-out;
+        transition: all 0.3s ease-out;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        display: block;
+        pointer-events: none;
+        left: 0;
+        top: 0;
+        height: 4px;
+        width: 0;
+        z-index: 1;
+        background: -moz-linear-gradient(top, #e66ccb 0%, #f0f300 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #e66ccb), color-stop(100%, #f0f300));
+        background: -webkit-linear-gradient(top, #e66ccb 0%, #f0f300 100%);
+        background: -o-linear-gradient(top, #e66ccb 0%, #f0f300 100%);
+        background: -ms-linear-gradient(top, #e66ccb 0%, #f0f300 100%);
+        background: linear-gradient(to bottom, #e66ccb 0%, #f0f300 100%);
+        -webkit-transition: all 0.3s ease-out;
+        transition: all 0.3s ease-out;
+      }
+
+      .di {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+
+        &::before {
+          bottom: 0;
+          right: 0;
+          content: '';
+          position: absolute;
+          display: block;
+          pointer-events: none;
+          width: 4px;
+          height: 0;
+          z-index: 1;
+          background: -moz-linear-gradient(top, #e66ccb 0%, #f0f300 100%);
+          background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #e66ccb), color-stop(100%, #f0f300));
+          background: -webkit-linear-gradient(top, #e66ccb 0%, #f0f300 100%);
+          background: -o-linear-gradient(top, #e66ccb 0%, #f0f300 100%);
+          background: -ms-linear-gradient(top, #e66ccb 0%, #f0f300 100%);
+          background: linear-gradient(to bottom, #e66ccb 0%, #f0f300 100%);
+          -webkit-transition: all 0.3s ease-out;
+          transition: all 0.3s ease-out;
+        }
+
+        &::after {
+          content: '';
+          position: absolute;
+          display: block;
+          pointer-events: none;
+          right: 0;
+          bottom: 0;
+          height: 4px;
+          width: 0;
+          z-index: 1;
+          background: -moz-linear-gradient(top, #e66ccb 0%, #f0f300 100%);
+          background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #e66ccb), color-stop(100%, #f0f300));
+          background: -webkit-linear-gradient(top, #e66ccb 0%, #f0f300 100%);
+          background: -o-linear-gradient(top, #e66ccb 0%, #f0f300 100%);
+          background: -ms-linear-gradient(top, #e66ccb 0%, #f0f300 100%);
+          background: linear-gradient(to bottom, #e66ccb 0%, #f0f300 100%);
+          -webkit-transition: all 0.3s ease-out;
+          transition: all 0.3s ease-out;
+        }
+      }
 
       > img {
         width: 100%;
+        -webkit-transition: all 0.3s ease-out;
+        transition: all 0.3s ease-out;
+
+        &:hover {
+          -webkit-transform: scale(1.1);
+          -ms-transform: scale(1.1);
+          transform: scale(1.1);
+        }
       }
 
       .card-info {
-        padding: 5px;
+        padding: 8px 5px 5px;
 
         .goods-name {
           font-size: 16px;

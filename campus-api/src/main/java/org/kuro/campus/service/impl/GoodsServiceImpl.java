@@ -13,6 +13,7 @@ import org.kuro.campus.model.vo.GoodsDetailVo;
 import org.kuro.campus.model.vo.GoodsVo;
 import org.kuro.campus.service.GoodsService;
 import org.kuro.campus.utils.CurrentUser;
+import org.kuro.campus.utils.SensitiveFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,9 @@ public class GoodsServiceImpl implements GoodsService {
     @Autowired
     private ImageMapper imageMapper;
 
+    @Autowired
+    private SensitiveFilter sensitiveFilter;
+
     /**
      * 发布商品
      * @param goods
@@ -43,6 +47,10 @@ public class GoodsServiceImpl implements GoodsService {
         if (StringUtils.isBlank(user.getPhone()) || StringUtils.isBlank(user.getAddress())) {
             return Result.error(ResultCode.PHONE_IS_NOT_BIND);
         }
+        // 过滤敏感词
+        goods.setIntroduce(sensitiveFilter.filter(goods.getIntroduce()));
+        goods.setName(sensitiveFilter.filter(goods.getName()));
+
         goods.setCreateDate(new Date());
         goods.setUserId(user.getId());
         goodsMapper.insertSelective(goods);
@@ -73,8 +81,7 @@ public class GoodsServiceImpl implements GoodsService {
      * @return
      */
     @Override
-    public Result goodsDetail(Integer goodsId) {
-        GoodsDetailVo vo = goodsMapper.goodsDetailById(goodsId);
-        return Result.ok().data("goods", vo);
+    public GoodsDetailVo goodsDetail(Integer goodsId) {
+        return goodsMapper.goodsDetailById(goodsId);
     }
 }

@@ -15,3 +15,11 @@ export const registerApi = ((data: any) => {
     data: data
   })
 })
+
+export const adminLoginApi = ((data: any) => {
+  return request({
+    url: '/pub/user/admin_login',
+    method: 'post',
+    data
+  })
+})
