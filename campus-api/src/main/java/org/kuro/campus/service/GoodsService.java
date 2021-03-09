@@ -19,9 +19,12 @@ public interface GoodsService {
 
     /**
      * 首页商品
+     * @param page
+     * @param limit
+     * @param qualification 查询条件
      * @return
      */
-    Result indexGoods(Integer page, Integer limit);
+    Result indexGoods(Integer page, Integer limit, String qualification);
 
     /**
      * 商品详情

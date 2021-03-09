@@ -38,6 +38,7 @@ public class GoodsServiceImpl implements GoodsService {
 
     /**
      * 发布商品
+     *
      * @param goods
      * @return
      */
@@ -59,13 +60,15 @@ public class GoodsServiceImpl implements GoodsService {
 
     /**
      * 首页商品
-     *
+     * @param page
+     * @param limit
+     * @param qualification 查询条件
      * @return
      */
     @Override
-    public Result indexGoods(Integer page, Integer limit) {
+    public Result indexGoods(Integer page, Integer limit, String qualification) {
         page = (page - 1) * limit;
-        List<GoodsVo> goods = goodsMapper.indexGoods(page, limit);
+        List<GoodsVo> goods = goodsMapper.indexGoods(page, limit, qualification);
         Integer total = goodsMapper.goodsCount();
         for (GoodsVo good : goods) {
             Image image = imageMapper.findOneImageByGoodsId(good.getId());
@@ -77,6 +80,7 @@ public class GoodsServiceImpl implements GoodsService {
 
     /**
      * 商品详情
+     *
      * @param goodsId
      * @return
      */

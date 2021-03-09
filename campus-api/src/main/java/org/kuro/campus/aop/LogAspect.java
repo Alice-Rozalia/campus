@@ -21,7 +21,8 @@ public class LogAspect {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Pointcut("execution(* org.kuro.campus.controller.*.*(..))")
-    public void log() { }
+    public void log() {
+    }
 
     @Before("log()")
     public void doBefore(JoinPoint joinPoint) {

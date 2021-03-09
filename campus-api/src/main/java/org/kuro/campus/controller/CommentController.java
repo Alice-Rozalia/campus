@@ -5,10 +5,13 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.kuro.campus.model.entity.Comment;
 import org.kuro.campus.model.entity.User;
+import org.kuro.campus.model.page.PageResult;
 import org.kuro.campus.model.response.Result;
 import org.kuro.campus.model.response.ResultCode;
 import org.kuro.campus.service.CommentService;
+import org.kuro.campus.service.LikeService;
 import org.kuro.campus.service.UserService;
+import org.kuro.campus.utils.CurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +36,9 @@ public class CommentController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private LikeService likeService;
+
     @RequiresPermissions({"comment:add"})
     @PostMapping("/pri/comment")
     @ApiOperation(value = "添加评论", notes = "添加评论")
@@ -49,6 +55,7 @@ public class CommentController {
             @RequestParam(value = "limit", defaultValue = "5") Integer limit
     ) {
         List<Comment> comment = commentService.findCommentByEntity(0, goodsId, page, limit);
+        Integer total = commentService.findCountByEntity(0, goodsId);
 
         List<Map<String, Object>> commentVoList = new ArrayList<>();
         if (commentVoList != null) {
@@ -58,6 +65,13 @@ public class CommentController {
                 commentVo.put("comment", item);
                 // 评论人
                 commentVo.put("user", userService.findUserById(item.getUserId()));
+                // 点赞数量
+                Long likeCount = likeService.findEntityLikeCount(1, item.getId());
+                // 点赞状态
+                Integer likeStatus = CurrentUser.getCurrentUser() == null ? 0 : likeService.findEntityLikeStatus(CurrentUser.getCurrentUser().getId(), 1, item.getId());
+
+                commentVo.put("likeCount", likeCount);
+                commentVo.put("likeStatus", likeStatus);
 
                 // 回复列表
                 List<Comment> replyList = commentService.findCommentByEntity(1, item.getId(), 1, Integer.MAX_VALUE);
@@ -83,6 +97,8 @@ public class CommentController {
             }
         }
 
-        return Result.ok().data("comment", commentVoList);
+        PageResult<Map<String, Object>> result = new PageResult<>(total, commentVoList);
+
+        return Result.ok().data("comment", result);
     }
 }

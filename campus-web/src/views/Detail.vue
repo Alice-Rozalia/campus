@@ -38,7 +38,7 @@
           <span class="goods-category">{{ goods.category }}</span>
         </div>
         <div class="talk">
-          <el-button type="primary" size="mini">私聊</el-button>
+          <el-button @click="dialogVisible = true" type="primary" size="mini">私聊</el-button>
         </div>
       </div>
     </div>
@@ -58,7 +58,9 @@
         </div>
         <div class="icon-btn">
           <span><i class="el-icon-chat-dot-round"></i> {{ item.replyCount }}</span>
-          <i class="el-icon-star-off"></i> 2
+          <span @click="handleLike(item.comment.id)" :class="item.likeStatus === 0 ? '' : 'liked'">
+            <i class="el-icon-star-off"></i> {{ item.likeCount }}
+          </span>
         </div>
         <div class="talk-box">
           <p>
@@ -98,7 +100,30 @@
           <el-button @click="commentHandle(3, item.comment.id, item.user.id)" type="primary">回复</el-button>
         </div>
       </div>
+
+      <div class="footer-pagination">
+        <el-pagination
+          layout="prev, pager, next"
+          :total="total"
+          :page-size="query.limit"
+          @current-change="handlePageChange"
+        />
+      </div>
     </div>
+
+    <el-dialog
+      title="发送私信"
+      v-model="dialogVisible"
+      width="50%"
+    >
+      <el-input v-model="content" autocomplete="off" placeholder="发送私信..."/>
+      <template #footer>
+    <span class="dialog-footer">
+      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button type="primary" @click="sendLetter">发 送</el-button>
+    </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -110,6 +135,8 @@ import { addCommentApi } from '@/api/comment'
 import { fetchCommentsApi } from '@/api/comment'
 import { warningNotification } from '@/utils/notification'
 import { successMessage, errorMessage } from '@/utils/message'
+import { sendLetterApi } from '@/api/message'
+import { giveLikeApi } from '@/api/like'
 import dateStr from '@/utils/format'
 import Header from '@/components/Header.vue'
 
@@ -133,7 +160,10 @@ export default defineComponent({
       query: {
         page: 1,
         limit: 5
-      }
+      },
+      dialogVisible: false,
+      content: '',
+      total: 0
     })
 
     onBeforeMount(() => {
@@ -148,6 +178,7 @@ export default defineComponent({
       getCommentList()
     })
 
+    // 获取商品详情
     const getGoodsDetail = async () => {
       const id: number = Number(route.params.id)
       if (!id) {
@@ -159,18 +190,22 @@ export default defineComponent({
       }
     }
 
+    // 获取评论列表
     const getCommentList = async () => {
       const id: number = Number(route.params.id)
       const { data } = await fetchCommentsApi(id, state.query)
       if (data.success) {
-        state.comments = data.data.comment
+        state.comments = data.data.comment.items
+        state.total = data.data.comment.total
       }
     }
 
+    // 显示评论输入框
     const showReplyInput = (id: number) => {
       state.flag = id
     }
 
+    // 评论
     const commentHandle = (type: number, cid: number, uid: number) => {
       const token = window.sessionStorage.getItem('token')
       if (!token) return warningNotification('尚未登录，请先登录！')
@@ -206,11 +241,51 @@ export default defineComponent({
       }
     }
 
+    // 发送私信
+    const sendLetter = async () => {
+      if (state.content.trim() === '') return warningNotification('私信内容不能为空！')
+      const target = JSON.stringify(state.goods)
+      const loginUser = JSON.stringify(state.loginUser)
+
+      const fromId = JSON.parse(loginUser).id
+      const toId = JSON.parse(target).userId
+
+      if (fromId === toId) return warningNotification('不能与自己私聊！')
+
+      const { data } = await sendLetterApi({ fromId, toId, content: state.content })
+
+      if (data.success) {
+        successMessage(data.message)
+        state.content = ''
+        state.dialogVisible = false
+      }
+    }
+
+    // 点赞
+    const handleLike = async (id: number) => {
+      const token = window.sessionStorage.getItem('token')
+      if (!token) return warningNotification('尚未登录，请先登录！')
+
+      const { data } = await giveLikeApi({ entityType: 1, entityId: id })
+      if (data.success) {
+        getCommentList()
+      }
+    }
+
+    // 分页
+    const handlePageChange = (page: number) => {
+      state.query.page = page
+      getCommentList()
+    }
+
     return {
       ...toRefs(state),
       showReplyInput,
       commentHandle,
-      dateStr
+      dateStr,
+      sendLetter,
+      handleLike,
+      handlePageChange
     }
   }
 })

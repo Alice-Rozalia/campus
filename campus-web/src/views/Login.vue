@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, toRefs, watch } from 'vue'
+import { defineComponent, onMounted, reactive, toRefs } from 'vue'
 import { loginForm, registerUser, rules } from '@/utils/validators'
 import LoginForm from '@/components/loginRegister/LoginForm.vue'
 import RegisterForm from '@/components/loginRegister/RegisterForm.vue'

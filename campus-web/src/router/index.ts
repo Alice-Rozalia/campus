@@ -27,6 +27,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/Message.vue')
   },
   {
+    path: '/letter/:id',
+    name: 'Letter',
+    component: () => import('@/views/Letter.vue')
+  },
+  {
     path: '/admin/login',
     name: 'AdminLogin',
     component: () => import('@/views/admin/Login.vue')

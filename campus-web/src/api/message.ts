@@ -7,3 +7,19 @@ export const fetchLettersApi = ((query: object) => {
     params: query
   })
 })
+
+export const fetchLetterDetailApi = ((id: string | string[], query: object) => {
+  return request({
+    url: '/pri/message/detail/' + id,
+    method: 'get',
+    params: query
+  })
+})
+
+export const sendLetterApi = ((data: object) => {
+  return request({
+    url: '/pri/message/send',
+    method: 'post',
+    data
+  })
+})

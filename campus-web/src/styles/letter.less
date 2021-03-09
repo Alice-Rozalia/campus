@@ -1,0 +1,60 @@
+.letter-container {
+  min-height: 100vh;
+  background-color: #f2f2f2;
+
+  .letter-main {
+    width: 1000px;
+    margin: 20px auto 0;
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 8px 15px;
+    box-sizing: border-box;
+
+    .letter-target {
+      display: flex;
+      align-items: center;
+      padding: 8px 15px;
+      font-size: 16px;
+      border-bottom: 1px solid #ccc;
+      margin-bottom: 15px;
+
+      .target-user {
+        font-size: 18px;
+      }
+    }
+
+    .letter-list {
+      .letter-card-item {
+        margin-bottom: 8px;
+
+        .letter-card-item-box {
+          display: flex;
+          align-items: center;
+
+          .letter-time {
+            font-size: 12px;
+            padding: 0 0 5px;
+            color: #616776;
+          }
+        }
+
+        .my-letter {
+          justify-content: flex-end;
+        }
+      }
+    }
+
+    .send-letter {
+      padding: 22px 0 18px;
+      display: flex;
+
+      .el-button {
+        margin-left: 15px;
+      }
+    }
+
+    .footer-pagination {
+      text-align: center;
+    }
+  }
+}

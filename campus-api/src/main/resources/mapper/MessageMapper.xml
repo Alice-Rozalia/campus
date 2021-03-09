@@ -33,7 +33,7 @@
         from tb_message
         where from_id != 0
         and conversation_id = #{conversationId}
-        order by id desc
+        order by id asc
         limit #{page}, #{limit}
     </select>
     

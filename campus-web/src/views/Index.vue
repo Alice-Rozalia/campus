@@ -18,8 +18,8 @@
               <div class="card-info">
                 <p class="goods-name">{{ item.name }}</p>
                 <div class="goods-publish">
-                  <span class="el-icon-time">{{ item.createDate }}</span>
-                  <span class="el-icon-view">{{ item.look }}</span>
+                  <span><i class="el-icon-time"></i> {{ item.createDate }}</span>
+                  <span><i class="el-icon-view"></i> {{ item.look }}</span>
                 </div>
                 <div class="introduce">{{ item.introduce }}</div>
                 <div class="goods-price-addr">
@@ -75,6 +75,7 @@ export default defineComponent({
       if (data.success) {
         const items = data.data.goods.items
         state.total = data.data.goods.total
+        console.log(data.data.goods.items)
 
         const num = Math.ceil(items.length / 4)
 

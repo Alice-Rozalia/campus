@@ -26,10 +26,10 @@
 
     <select id="indexGoods" resultType="org.kuro.campus.model.vo.GoodsVo">
         SELECT g.id, g.name, g.price, g.introduce, g.create_date, g.look, c.`name` as category
-        FROM tb_goods g
+        FROM tb_goods gg.price
         LEFT JOIN tb_category c ON g.category_id = c.id
         WHERE g.enabled = 1
-        ORDER BY g.create_date DESC
+        ORDER BY #{qualification} DESC
         LIMIT #{page}, #{limit}
     </select>
 

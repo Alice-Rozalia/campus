@@ -37,9 +37,11 @@ public class GoodsController {
     @ApiOperation(value = "首页商品", notes = "获取未下架的商品")
     public Result indexGoods(
             @RequestParam(value = "page", defaultValue = "1") Integer page,
-            @RequestParam(value = "limit", defaultValue = "8") Integer limit
+            @RequestParam(value = "limit", defaultValue = "8") Integer limit,
+            @RequestParam(value = "qualification", defaultValue = "price") String qualification
     ) {
-        return goodsService.indexGoods(page, limit);
+        // qualification --> 查询条件
+        return goodsService.indexGoods(page, limit, qualification);
     }
 
     @GetMapping("/pub/goods/{goodsId}")

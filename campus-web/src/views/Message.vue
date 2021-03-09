@@ -6,23 +6,26 @@
       <el-tabs type="card">
         <el-tab-pane>
           <template #label>
-            <el-badge v-if="letterUnreadCount !== 0" :value="letterUnreadCount" :max="99" type="danger" style="font-size: 12px">朋友私信</el-badge>
+            <el-badge v-if="letterUnreadCount !== 0" :value="letterUnreadCount" :max="99" type="danger"
+                      style="font-size: 12px">朋友私信
+            </el-badge>
             <span v-else style="font-size: 12px">朋友私信</span>
           </template>
           <ul class="letter-list">
             <li v-for="item in letterList" :key="item.conversation.id">
-              <el-badge v-if="item.unreadCount !== 0" :value="item.unreadCount" :max="99" type="danger" style="font-size: 12px">
+              <el-badge v-if="item.unreadCount !== 0" :value="item.unreadCount" :max="99" type="danger"
+                        style="font-size: 12px">
                 <el-avatar :size="42" :src="item.target.avatar"></el-avatar>
               </el-badge>
               <el-avatar v-else :size="42" :src="item.target.avatar"></el-avatar>
-              <div class="list-right">
+              <div class="list-right" @click="goLetterDetailPage(item.conversation.conversationId)">
                 <div class="list-right-hd">
-                  <span>{{item.target.username}}</span>
-                  <span>{{item.conversation.createTime}}</span>
+                  <span>{{ item.target.username }}</span>
+                  <span>{{ item.conversation.createTime }}</span>
                 </div>
                 <div class="list-right-bd">
-                  <p>{{item.conversation.content}}</p>
-                  <span>共 {{item.letterCount}} 条会话</span>
+                  <p>{{ item.conversation.content }}</p>
+                  <span>共 {{ item.letterCount }} 条会话</span>
                 </div>
               </div>
             </li>
@@ -30,7 +33,7 @@
         </el-tab-pane>
         <el-tab-pane>
           <template #label>
-<!--            <el-badge :value="0" :max="99" type="danger" style="font-size: 12px">系统通知</el-badge>-->
+            <!--            <el-badge :value="0" :max="99" type="danger" style="font-size: 12px">系统通知</el-badge>-->
             <span style="font-size: 12px">系统通知</span>
           </template>
         </el-tab-pane>
@@ -77,6 +80,7 @@ export default defineComponent({
       getLetterList()
     })
 
+    // 获取会话列表
     const getLetterList = async () => {
       const { data } = await fetchLettersApi(state.query)
       if (data.success) {
@@ -86,8 +90,14 @@ export default defineComponent({
       }
     }
 
+    // 跳转会话详情页
+    const goLetterDetailPage = (id: string) => {
+      router.push('/letter/' + id)
+    }
+
     return {
-      ...toRefs(state)
+      ...toRefs(state),
+      goLetterDetailPage
     }
   }
 })

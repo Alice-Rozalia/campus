@@ -1,0 +1,1 @@
+2021-03-07 21:09:17.025  WARN 15256 --- [main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[org.kuro.campus]' package. Please check your configuration.
