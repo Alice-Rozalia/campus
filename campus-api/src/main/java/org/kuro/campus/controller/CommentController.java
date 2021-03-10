@@ -3,15 +3,20 @@ package org.kuro.campus.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.kuro.campus.event.EventProducer;
 import org.kuro.campus.model.entity.Comment;
+import org.kuro.campus.model.entity.Event;
+import org.kuro.campus.model.entity.Goods;
 import org.kuro.campus.model.entity.User;
 import org.kuro.campus.model.page.PageResult;
 import org.kuro.campus.model.response.Result;
 import org.kuro.campus.model.response.ResultCode;
 import org.kuro.campus.service.CommentService;
+import org.kuro.campus.service.GoodsService;
 import org.kuro.campus.service.LikeService;
 import org.kuro.campus.service.UserService;
 import org.kuro.campus.utils.CurrentUser;
+import org.kuro.campus.utils.CustomConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +33,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1")
 @Api(value = "系统管理模块", tags = "评论管理")
-public class CommentController {
+public class CommentController implements CustomConstant {
 
     @Autowired
     private CommentService commentService;
@@ -39,11 +44,39 @@ public class CommentController {
     @Autowired
     private LikeService likeService;
 
+    @Autowired
+    private EventProducer eventProducer;
+
+    @Autowired
+    private GoodsService goodsService;
+
     @RequiresPermissions({"comment:add"})
-    @PostMapping("/pri/comment")
+    @PostMapping("/pri/comment/{goodsId}")
     @ApiOperation(value = "添加评论", notes = "添加评论")
-    public Result addComment(@RequestBody @Valid Comment comment) {
+    public Result addComment(
+            @RequestBody @Valid Comment comment,
+            @PathVariable("goodsId") Integer goodsId
+    ) {
         commentService.addComment(comment);
+
+        // 触发评论事件
+        Event event = new Event()
+                .setTopic(TOPIC_COMMENT)
+                .setUserId(CurrentUser.getCurrentUser().getId())
+                .setEntityType(comment.getEntityType())
+                .setEntityId(comment.getEntityId())
+                .setData("goodsId", goodsId);
+
+        if (comment.getEntityType() == 0) {
+            Goods target = goodsService.findGoodsById(comment.getEntityId());
+            event.setEntityUserId(target.getUserId());
+        } else if (comment.getEntityType() == 1) {
+            Comment target = commentService.findCommentById(comment.getEntityId());
+            event.setEntityUserId(target.getUserId());
+        }
+
+        eventProducer.fireEvent(event);
+
         return Result.ok(ResultCode.ADD_SUCCESS);
     }
 

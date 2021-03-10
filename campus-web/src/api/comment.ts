@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export const addCommentApi = ((comment: object) => {
+export const addCommentApi = ((comment: object, id: number) => {
   return request({
-    url: '/pri/comment',
+    url: '/pri/comment/' + id,
     method: 'post',
     data: comment
   })

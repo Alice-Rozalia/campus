@@ -75,7 +75,6 @@ export default defineComponent({
       if (data.success) {
         const items = data.data.goods.items
         state.total = data.data.goods.total
-        console.log(data.data.goods.items)
 
         const num = Math.ceil(items.length / 4)
 

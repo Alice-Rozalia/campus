@@ -32,6 +32,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/Letter.vue')
   },
   {
+    path: '/my_center',
+    name: 'MyCenter',
+    component: () => import('@/views/MyCenter.vue')
+  },
+  {
     path: '/admin/login',
     name: 'AdminLogin',
     component: () => import('@/views/admin/Login.vue')

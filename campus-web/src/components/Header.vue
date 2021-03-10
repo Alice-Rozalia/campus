@@ -6,7 +6,7 @@
       </router-link>
 
       <div class="search" v-if="isIndex">
-        <el-input placeholder="显卡RTX3060">
+        <el-input placeholder="ROG 幻15">
           <template #append>
             <el-button icon="el-icon-search"></el-button>
           </template>
@@ -24,7 +24,9 @@
             </el-badge>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item>个人中心</el-dropdown-item>
+                <el-dropdown-item>
+                  <router-link to="/my_center">个人中心</router-link>
+                </el-dropdown-item>
                 <el-badge :max="99" :value="5" type="danger">
                   <el-dropdown-item>
                     <router-link to="/message">消息中心</router-link>

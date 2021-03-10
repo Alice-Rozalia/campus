@@ -14,9 +14,15 @@ import java.util.List;
  */
 public interface GoodsMapper extends Mapper<Goods> {
 
-    List<GoodsVo> indexGoods(@Param("page") Integer page, @Param("limit") Integer limit, @Param("qualification") String qualification);
+    List<GoodsVo> indexGoods(@Param("page") Integer page, @Param("limit") Integer limit, @Param("qualification") Integer qualification);
 
     Integer goodsCount();
 
     GoodsDetailVo goodsDetailById(@Param("id") Integer id);
+
+    Goods findGoodsById(@Param("id") Integer id);
+
+    List<Goods> findMyGoods(@Param("page") Integer page, @Param("limit") Integer limit, @Param("userId") Integer userId);
+
+    Integer findMyGoodsCount(@Param("userId") Integer userId);
 }

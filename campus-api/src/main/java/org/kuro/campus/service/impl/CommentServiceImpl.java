@@ -45,4 +45,9 @@ public class CommentServiceImpl implements CommentService {
         comment.setContent(sensitiveFilter.filter(comment.getContent()));
         return commentMapper.insertSelective(comment);
     }
+
+    @Override
+    public Comment findCommentById(Integer id) {
+        return commentMapper.selectByPrimaryKey(id);
+    }
 }

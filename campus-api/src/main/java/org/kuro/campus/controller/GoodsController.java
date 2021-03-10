@@ -4,11 +4,13 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.kuro.campus.model.entity.Goods;
+import org.kuro.campus.model.entity.User;
+import org.kuro.campus.model.page.PageResult;
 import org.kuro.campus.model.response.Result;
+import org.kuro.campus.model.response.ResultCode;
 import org.kuro.campus.model.vo.GoodsDetailVo;
-import org.kuro.campus.service.CommentService;
 import org.kuro.campus.service.GoodsService;
-import org.kuro.campus.service.UserService;
+import org.kuro.campus.utils.CurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,9 +40,9 @@ public class GoodsController {
     public Result indexGoods(
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "limit", defaultValue = "8") Integer limit,
-            @RequestParam(value = "qualification", defaultValue = "price") String qualification
+            @RequestParam(value = "qualification", defaultValue = "1") Integer qualification
     ) {
-        // qualification --> 查询条件
+        // qualification --> 排序条件，1表示根据创建时间排序，2表价格，3表浏览量
         return goodsService.indexGoods(page, limit, qualification);
     }
 
@@ -49,5 +51,30 @@ public class GoodsController {
     public Result goodsDetail(@PathVariable("goodsId") Integer goodsId) {
         GoodsDetailVo vo = goodsService.goodsDetail(goodsId);
         return Result.ok().data("goods", vo);
+    }
+
+    @RequiresPermissions({"goods:my"})
+    @GetMapping("/pri/goods/my")
+    @ApiOperation(value = "我的商品", notes = "查询用户发布的商品")
+    public Result findMyGoods(
+            @RequestParam(value = "page", defaultValue = "1") Integer page,
+            @RequestParam(value = "limit", defaultValue = "8") Integer limit
+    ) {
+        User user = CurrentUser.getCurrentUser();
+        PageResult<Goods> result = goodsService.findMyGoods(page, limit, user.getId());
+        return Result.ok().data("myGoods", result);
+    }
+
+    @RequiresPermissions({"goods:delete"})
+    @PutMapping("/pri/goods/delete/{goodsId}")
+    @ApiOperation(value = "删除商品", notes = "逻辑删除商品")
+    public Result deleteGoods(@PathVariable("goodsId") Integer goodsId) {
+        Goods goods = new Goods();
+        goods.setEnabled(false);
+        goods.setId(goodsId);
+
+        goodsService.updateGoods(goods);
+
+        return Result.ok(ResultCode.DELETE_SUCCESS);
     }
 }

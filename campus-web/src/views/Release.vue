@@ -6,6 +6,14 @@
       <el-card>
         <h1 class="release-title">发布商品</h1>
 
+        <div class="alert">
+          <el-alert
+            title="绑定手机号并填写地址后才能发布"
+            type="warning"
+            effect="dark">
+          </el-alert>
+        </div>
+
         <el-form ref="goodsFormRef" :rules="goodsRules" :model="goodsForm" label-width="80px">
           <el-form-item label="商品名" prop="name">
             <el-input v-model="goodsForm.name" clearable placeholder="商品的商品名"/>

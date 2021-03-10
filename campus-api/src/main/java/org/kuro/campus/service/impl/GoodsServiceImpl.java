@@ -59,14 +59,15 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     /**
-     * 首页商品
+     * 排序条件，1表示根据创建时间排序，2表价格，3表浏览量
+     *
      * @param page
      * @param limit
      * @param qualification 查询条件
      * @return
      */
     @Override
-    public Result indexGoods(Integer page, Integer limit, String qualification) {
+    public Result indexGoods(Integer page, Integer limit, Integer qualification) {
         page = (page - 1) * limit;
         List<GoodsVo> goods = goodsMapper.indexGoods(page, limit, qualification);
         Integer total = goodsMapper.goodsCount();
@@ -87,5 +88,42 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public GoodsDetailVo goodsDetail(Integer goodsId) {
         return goodsMapper.goodsDetailById(goodsId);
+    }
+
+    /**
+     * 根据id查询商品
+     *
+     * @param goodsId
+     * @return
+     */
+    @Override
+    public Goods findGoodsById(Integer goodsId) {
+        return goodsMapper.findGoodsById(goodsId);
+    }
+
+    /**
+     * 根据用户 id 查询该用户发布的商品
+     *
+     * @param page
+     * @param limit
+     * @param userId
+     * @return
+     */
+    @Override
+    public PageResult<Goods> findMyGoods(Integer page, Integer limit, Integer userId) {
+        List<Goods> goods = goodsMapper.findMyGoods(page, limit, userId);
+        Integer total = goodsMapper.findMyGoodsCount(userId);
+        return new PageResult<>(total, goods);
+    }
+
+    /**
+     * 修改商品
+     *
+     * @param goods
+     * @return
+     */
+    @Override
+    public Integer updateGoods(Goods goods) {
+        return goodsMapper.updateByPrimaryKeySelective(goods);
     }
 }

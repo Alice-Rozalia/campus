@@ -38,6 +38,8 @@
           <span class="goods-category">{{ goods.category }}</span>
         </div>
         <div class="talk">
+          <el-button v-if="hasFollowed" type="info" size="mini" @click="unfollowInterest">已收藏</el-button>
+          <el-button v-else type="danger" size="mini" @click="followInterest">收藏</el-button>
           <el-button @click="dialogVisible = true" type="primary" size="mini">私聊</el-button>
         </div>
       </div>
@@ -58,7 +60,7 @@
         </div>
         <div class="icon-btn">
           <span><i class="el-icon-chat-dot-round"></i> {{ item.replyCount }}</span>
-          <span @click="handleLike(item.comment.id)" :class="item.likeStatus === 0 ? '' : 'liked'">
+          <span @click="handleLike(item.comment.id, item.user.id)" :class="item.likeStatus === 1 ? 'liked' : ''">
             <i class="el-icon-star-off"></i> {{ item.likeCount }}
           </span>
         </div>
@@ -137,6 +139,7 @@ import { warningNotification } from '@/utils/notification'
 import { successMessage, errorMessage } from '@/utils/message'
 import { sendLetterApi } from '@/api/message'
 import { giveLikeApi } from '@/api/like'
+import { hasFollowApi, followInterestApi, unfollowInterestApi } from '@/api/follow'
 import dateStr from '@/utils/format'
 import Header from '@/components/Header.vue'
 
@@ -163,13 +166,21 @@ export default defineComponent({
       },
       dialogVisible: false,
       content: '',
-      total: 0
+      total: 0,
+      hasFollowed: false
     })
 
+    const id: number = Number(route.params.id)
+
     onBeforeMount(() => {
+      if (!id) {
+        router.push('/')
+      }
+
       const user = window.sessionStorage.getItem('user')
       if (user) {
         state.loginUser = JSON.parse(user)
+        hasFollow()
       }
     })
 
@@ -180,19 +191,22 @@ export default defineComponent({
 
     // 获取商品详情
     const getGoodsDetail = async () => {
-      const id: number = Number(route.params.id)
-      if (!id) {
-        router.push('/')
-      }
       const { data } = await fetchGoodsDetailByIdApi(id)
       if (data.success) {
         state.goods = data.data.goods
       }
     }
 
+    // 查询用户是否收藏了该商品
+    const hasFollow = async () => {
+      const { data } = await hasFollowApi(id)
+      if (data.success) {
+        state.hasFollowed = data.data.hasFollowed
+      }
+    }
+
     // 获取评论列表
     const getCommentList = async () => {
-      const id: number = Number(route.params.id)
       const { data } = await fetchCommentsApi(id, state.query)
       if (data.success) {
         state.comments = data.data.comment.items
@@ -212,8 +226,7 @@ export default defineComponent({
       if (state.input1.trim() === '' && state.input2.trim() === '' && state.input3.trim() === '') return errorMessage('评论内容不能为空！')
       switch (type) {
         case 1:
-          const id: number = Number(route.params.id)
-          addCommentApi({ entityId: id, content: state.input1 }).then(res => {
+          addCommentApi({ entityType: 0, entityId: id, content: state.input1 }, id).then(res => {
             if (res.data.success) {
               getCommentList()
               successMessage('评论成功！')
@@ -222,7 +235,7 @@ export default defineComponent({
           break
         case 2:
           let com = { entityType: 1, entityId: cid, targetId: uid, content: state.input2 }
-          addCommentApi(com).then(res => {
+          addCommentApi(com, id).then(res => {
             if (res.data.success) {
               getCommentList()
               successMessage('评论成功！')
@@ -231,7 +244,7 @@ export default defineComponent({
           break
         case 3:
           let com3 = { entityType: 1, entityId: cid, targetId: uid, content: state.input3 }
-          addCommentApi(com3).then(res => {
+          addCommentApi(com3, id).then(res => {
             if (res.data.success) {
               getCommentList()
               successMessage('评论成功！')
@@ -262,13 +275,35 @@ export default defineComponent({
     }
 
     // 点赞
-    const handleLike = async (id: number) => {
+    const handleLike = async (entityId: number, userId: number) => {
       const token = window.sessionStorage.getItem('token')
       if (!token) return warningNotification('尚未登录，请先登录！')
 
-      const { data } = await giveLikeApi({ entityType: 1, entityId: id })
+      const { data } = await giveLikeApi({ entityUserId: userId, entityId: entityId, goodsId: id })
       if (data.success) {
         getCommentList()
+      }
+    }
+
+    // 收藏商品
+    const followInterest = async () => {
+      const token = window.sessionStorage.getItem('token')
+      if (!token) return warningNotification('尚未登录，请先登录！')
+
+      const { data } = await followInterestApi(id)
+      if (data.success) {
+        successMessage('已收藏！')
+        hasFollow()
+      }
+    }
+
+    // 取消收藏商品
+    const unfollowInterest = async () => {
+      const { data } = await unfollowInterestApi(id)
+      console.log(data)
+      if (data.success) {
+        successMessage('已取消收藏！')
+        hasFollow()
       }
     }
 
@@ -285,7 +320,9 @@ export default defineComponent({
       dateStr,
       sendLetter,
       handleLike,
-      handlePageChange
+      handlePageChange,
+      followInterest,
+      unfollowInterest
     }
   }
 })

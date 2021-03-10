@@ -1,10 +1,22 @@
 <template>
   <div class="banner">
     <!-- 左侧菜单-->
-    <div class="menu-content" ref="categoryRef">
+    <div class="menu-content" @mouseleave="hideCategoryDetail">
       <div class="menu-item" v-for="item in categories" :key="item.id" @mouseenter="showCategoryDetail(item)">
-        <span>{{item.name}}</span>
+        <span>{{ item.name }}</span>
         <i class="el-icon-caret-right"></i>
+      </div>
+
+      <!-- 详细分类 -->
+      <div class="menu-detail" v-show="JSON.stringify(actionCategory) !== '{}'">
+        <el-divider>{{ actionCategory.name }}</el-divider>
+
+        <div class="menu-detail-list-content">
+          <div class="menu-detail-items" v-for="val in actionCategory.children" :key="val.id">
+            <img :src="val.image" alt="swiper">
+            <p>{{ val.name }}</p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -29,16 +41,6 @@
         </div>
       </div>
 
-      <div ref="categoryRef" class="menu-detail" v-show="JSON.stringify(actionCategory) !== '{}'">
-        <el-divider>{{actionCategory.name}}</el-divider>
-
-        <div class="menu-detail-list-content">
-          <div class="menu-detail-items" v-for="val in actionCategory.children" :key="val.id">
-            <img :src="val.image" alt="swiper">
-            <p>{{val.name}}</p>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -50,12 +52,12 @@ import { fetchCategoriesApi } from '@/api/category'
 export default defineComponent({
   name: 'Banner',
   setup() {
-    const categoryRef = ref<null | HTMLElement>(null)
     const state = reactive({
       categories: [],
       actionCategory: {}
     })
 
+    // 获取分类
     const getCategories = async () => {
       const cacheCategories = window.sessionStorage.getItem('categories')
       if (cacheCategories) {
@@ -69,36 +71,29 @@ export default defineComponent({
       }
     }
 
+    onMounted(() => {
+      getCategories()
+    })
+
+    // 显示分类详情
     const showCategoryDetail = (item: object) => {
       state.actionCategory = item
     }
 
-    const handler = (e: MouseEvent) => {
-      if (categoryRef.value) {
-        if (!categoryRef.value.contains(e.target as HTMLElement) && state.actionCategory !== {}) {
-          state.actionCategory = {}
-        }
-      }
+    // 隐藏分类详情
+    const hideCategoryDetail = () => {
+      state.actionCategory = {}
     }
-
-    onMounted(() => {
-      document.addEventListener('mouseover', handler)
-      getCategories()
-    })
-
-    onUnmounted(() => {
-      document.removeEventListener('mouseover', handler)
-    })
 
     return {
       ...toRefs(state),
       showCategoryDetail,
-      categoryRef
+      hideCategoryDetail
     }
   }
 })
 </script>
 
 <style lang="less" scoped>
-  @import "../styles/banner.less";
+@import "../styles/banner.less";
 </style>

@@ -45,6 +45,9 @@ public enum ResultCode implements CustomizeResultCode {
 
     SEND_LETTER_SUCCESS(4501, "私信发送成功！"),
 
+    FOLLOW_WITH_INTEREST(4601, "已关注！"),
+    UNFOLLOW_WITH_INTEREST(4602, "已取消关注！"),
+
     /*运行时异常*/
     ARITHMETIC_EXCEPTION(9001,"算数异常！"),
     HAS_ASSOCIATED_DATA(9100, "该数据有关联数据，操作失败！"),

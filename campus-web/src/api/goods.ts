@@ -23,3 +23,18 @@ export const fetchGoodsDetailByIdApi = ((id: number) => {
     method: 'get'
   })
 })
+
+export const fetchMyGoodsApi = ((query: object) => {
+  return request({
+    url: '/pri/goods/my',
+    method: 'get',
+    params: query
+  })
+})
+
+export const deleteMyGoodsByIdApi = ((id: number) => {
+  return request({
+    url: '/pri/goods/delete/' + id,
+    method: 'put'
+  })
+})
