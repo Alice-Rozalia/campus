@@ -14,7 +14,12 @@ import java.util.List;
  */
 public interface GoodsMapper extends Mapper<Goods> {
 
-    List<GoodsVo> indexGoods(@Param("page") Integer page, @Param("limit") Integer limit, @Param("qualification") Integer qualification);
+    List<GoodsVo> indexGoods(
+            @Param("page") Integer page,
+            @Param("limit") Integer limit,
+            @Param("sort") String sort,
+            @Param("order") String order,
+            @Param("key") String key);
 
     Integer goodsCount();
 
@@ -22,7 +27,17 @@ public interface GoodsMapper extends Mapper<Goods> {
 
     Goods findGoodsById(@Param("id") Integer id);
 
-    List<Goods> findMyGoods(@Param("page") Integer page, @Param("limit") Integer limit, @Param("userId") Integer userId);
+    List<Goods> findMyGoods(
+            @Param("page") Integer page,
+            @Param("limit") Integer limit,
+            @Param("userId") Integer userId);
 
     Integer findMyGoodsCount(@Param("userId") Integer userId);
+
+    List<GoodsVo> indexGoodsByCategoryId(
+            @Param("page") Integer page,
+            @Param("limit") Integer limit,
+            @Param("categoryId") Integer categoryId);
+
+    Integer indexGoodsByCategoryIdCount(@Param("categoryId") Integer categoryId);
 }

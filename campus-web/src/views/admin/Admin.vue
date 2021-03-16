@@ -7,7 +7,7 @@
                :collapse="isCollapse" :collapse-transition="false" router :default-active="activePath">
         <el-submenu :index="item.id" v-for="item in menuList" :key="item.id">
           <!-- 一级菜单的模板区域 -->
-          <template slot="title">
+          <template #title>
             <!-- 图标 -->
             <i :class="item.icon"></i>
             <!-- 文本 -->
@@ -17,7 +17,7 @@
           <!-- 二级菜单 -->
           <el-menu-item :index="subitem.path" v-for="subitem in item.children" :key="subitem.id"
                         @click="saveNavState(subitem.path)">
-            <template slot="title">
+            <template #title>
               <!-- 图标 -->
               <i class="el-icon-menu"></i>
               <!-- 文本 -->
@@ -43,12 +43,14 @@
             <div class="person-photo">
               <img :src="loginUser.avatar" class="user-avatar" alt="avatar">
             </div>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>
-                <router-link to="/index">前台首页</router-link>
-              </el-dropdown-item>
-              <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
-            </el-dropdown-menu>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item>
+                  <router-link to="/">前台首页</router-link>
+                </el-dropdown-item>
+                <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
           </el-dropdown>
         </div>
       </el-header>
@@ -73,7 +75,7 @@ export default defineComponent({
     const state = reactive({
       isCollapse: false,
       activePath: 'admin',
-      loginUser: {},
+      loginUser: {}
     })
 
     onBeforeMount(() => {
@@ -115,4 +117,10 @@ export default defineComponent({
 
 <style lang="less" scoped>
 @import "../../styles/admin/admin.less";
+</style>
+
+<style>
+.el-main .el-card {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important;
+}
 </style>

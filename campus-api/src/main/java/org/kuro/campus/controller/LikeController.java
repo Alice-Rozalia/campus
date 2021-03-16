@@ -3,7 +3,6 @@ package org.kuro.campus.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.kuro.campus.event.EventProducer;
 import org.kuro.campus.model.entity.Event;
 import org.kuro.campus.model.entity.User;
 import org.kuro.campus.model.response.Result;
@@ -28,9 +27,6 @@ public class LikeController implements CustomConstant {
     @Autowired
     private LikeService likeService;
 
-    @Autowired
-    private EventProducer eventProducer;
-
     @RequiresPermissions({"give:like"})
     @PostMapping("/pri/give/like")
     @ApiOperation(value = "点赞", notes = "给实体点赞（此处只做评论点赞）")
@@ -52,19 +48,6 @@ public class LikeController implements CustomConstant {
         Map<String, Object> map = new HashMap<>();
         map.put("likeCount", likeCount);
         map.put("likeStatus", likeStatus);
-
-        // 触发点赞事件
-        if (likeStatus == 1) {
-            Event event = new Event()
-                    .setTopic(TOPIC_LIKE)
-                    .setUserId(user.getId())
-                    .setEntityType(ENTITY_TYPE_COMMENT)
-                    .setEntityId(entityId)
-                    .setEntityUserId(entityUserId)
-                    .setData("goodsId", goodsId);
-
-            eventProducer.fireEvent(event);
-        }
 
         return Result.ok().data(map).message("点赞成功！");
     }

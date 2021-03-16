@@ -3,10 +3,7 @@ package org.kuro.campus.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.kuro.campus.event.EventProducer;
 import org.kuro.campus.model.entity.Comment;
-import org.kuro.campus.model.entity.Event;
-import org.kuro.campus.model.entity.Goods;
 import org.kuro.campus.model.entity.User;
 import org.kuro.campus.model.page.PageResult;
 import org.kuro.campus.model.response.Result;
@@ -45,9 +42,6 @@ public class CommentController implements CustomConstant {
     private LikeService likeService;
 
     @Autowired
-    private EventProducer eventProducer;
-
-    @Autowired
     private GoodsService goodsService;
 
     @RequiresPermissions({"comment:add"})
@@ -58,24 +52,6 @@ public class CommentController implements CustomConstant {
             @PathVariable("goodsId") Integer goodsId
     ) {
         commentService.addComment(comment);
-
-        // 触发评论事件
-        Event event = new Event()
-                .setTopic(TOPIC_COMMENT)
-                .setUserId(CurrentUser.getCurrentUser().getId())
-                .setEntityType(comment.getEntityType())
-                .setEntityId(comment.getEntityId())
-                .setData("goodsId", goodsId);
-
-        if (comment.getEntityType() == 0) {
-            Goods target = goodsService.findGoodsById(comment.getEntityId());
-            event.setEntityUserId(target.getUserId());
-        } else if (comment.getEntityType() == 1) {
-            Comment target = commentService.findCommentById(comment.getEntityId());
-            event.setEntityUserId(target.getUserId());
-        }
-
-        eventProducer.fireEvent(event);
 
         return Result.ok(ResultCode.ADD_SUCCESS);
     }

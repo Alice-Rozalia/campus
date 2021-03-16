@@ -59,17 +59,18 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     /**
-     * 排序条件，1表示根据创建时间排序，2表价格，3表浏览量
+     * 首页商品
      *
      * @param page
      * @param limit
-     * @param qualification 查询条件
+     * @param sort
+     * @param order
      * @return
      */
     @Override
-    public Result indexGoods(Integer page, Integer limit, Integer qualification) {
+    public Result indexGoods(Integer page, Integer limit, String sort, String order, String key) {
         page = (page - 1) * limit;
-        List<GoodsVo> goods = goodsMapper.indexGoods(page, limit, qualification);
+        List<GoodsVo> goods = goodsMapper.indexGoods(page, limit, sort, order, key);
         Integer total = goodsMapper.goodsCount();
         for (GoodsVo good : goods) {
             Image image = imageMapper.findOneImageByGoodsId(good.getId());
@@ -125,5 +126,25 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public Integer updateGoods(Goods goods) {
         return goodsMapper.updateByPrimaryKeySelective(goods);
+    }
+
+    /**
+     * 根据分类id查询首页商品
+     *
+     * @param page       当前页
+     * @param limit      每页显示条数
+     * @param categoryId 分类id
+     * @return GoodsVo的分页对象
+     */
+    @Override
+    public PageResult<GoodsVo> findIndexGoodsByCategoryId(Integer page, Integer limit, Integer categoryId) {
+        page = (page - 1) * limit;
+        List<GoodsVo> goods = goodsMapper.indexGoodsByCategoryId(page, limit, categoryId);
+        Integer total = goodsMapper.indexGoodsByCategoryIdCount(categoryId);
+        for (GoodsVo good : goods) {
+            Image image = imageMapper.findOneImageByGoodsId(good.getId());
+            good.setCover(image.getUrl());
+        }
+        return new PageResult<>(total, goods);
     }
 }

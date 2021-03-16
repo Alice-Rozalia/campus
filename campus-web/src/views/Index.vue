@@ -37,8 +37,8 @@
             background
             layout="prev, pager, next"
             :total="total"
-            :current-page="query.page"
-            :page-size="query.limit"
+            :current-page="page"
+            :page-size="limit"
             @current-change="currentPageChange"
           >
           </el-pagination>
@@ -49,11 +49,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted } from 'vue'
-import { fetchIndexGoodsApi } from '@/api/goods'
+import { defineComponent, onMounted, reactive, computed, toRefs } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+import { GlobalDataProps } from '@/store'
 import Header from '@/components/Header.vue'
 import Banner from '@/components/Banner.vue'
-import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'Index',
@@ -62,50 +63,33 @@ export default defineComponent({
     Banner
   },
   setup() {
-    const state = reactive({
-      goods: [],
-      total: 0,
-      query: { page: 1, limit: 8 }
-    })
-
     const router = useRouter()
+    const store = useStore()
+    const state = useStore<GlobalDataProps>()
 
-    const getIndexGoods = async () => {
-      const { data } = await fetchIndexGoodsApi(state.query)
-      if (data.success) {
-        const items = data.data.goods.items
-        state.total = data.data.goods.total
-
-        const num = Math.ceil(items.length / 4)
-
-        let result = items.map((item: any, index: number, array: []) => {
-          if (index < 4) {
-            return array.slice(index * num, (index + 1) * num)
-          } else {
-            return false
-          }
-        })
-
-        result = JSON.stringify(result.filter((item: any) => item))
-        state.goods = JSON.parse(result)
-      }
-    }
+    const set = reactive({
+      goods: computed(() => state.state.goods.data),
+      total: computed(() => state.state.goods.total),
+      page: computed(() => state.state.query.page),
+      limit: computed(() => state.state.query.limit)
+    })
 
     onMounted(() => {
-      getIndexGoods()
+      store.dispatch('getIndexGoods')
     })
 
+    // 分页
     const currentPageChange = (newPage: number) => {
-      state.query.page = newPage
-      getIndexGoods()
+      store.dispatch('pageChange', newPage)
     }
 
+    // 前往商品详情页
     const goDetailPage = (item: any) => {
       router.push('/detail/' + item.id)
     }
 
     return {
-      ...toRefs(state),
+      ...toRefs(set),
       currentPageChange,
       goDetailPage
     }
@@ -115,10 +99,4 @@ export default defineComponent({
 
 <style lang="less" scoped>
 @import "../styles/index.less";
-</style>
-
-<style lang="less">
-.kuan-vue-waterfall {
-  width: 1200px !important;
-}
 </style>

@@ -12,7 +12,8 @@
         <el-divider>{{ actionCategory.name }}</el-divider>
 
         <div class="menu-detail-list-content">
-          <div class="menu-detail-items" v-for="val in actionCategory.children" :key="val.id">
+          <div @click="getGoodsByCategory(val.id, val.name)" class="menu-detail-items"
+               v-for="val in actionCategory.children" :key="val.id">
             <img :src="val.image" alt="swiper">
             <p>{{ val.name }}</p>
           </div>
@@ -32,12 +33,18 @@
       </div>
       <div class="order-box">
         <div class="tags">
-          <el-tag>所有二手商品</el-tag>
+          <el-tag v-text="searchText"></el-tag>
         </div>
         <div class="order-item">
-          <div class="active-order">时间</div>
-          <div class="order-item-price">价格</div>
-          <div>浏览量</div>
+          <div :class="active === 1 ? `active-order ${className}` : ''"
+               @click="getIndexGoodsBySort('create_date', 1)">时间
+          </div>
+          <div :class="active === 2 ? `active-order ${className}` : ''" class="order-item-price"
+               @click="getIndexGoodsBySort('price', 2)">价格
+          </div>
+          <div :class="active === 3 ? `active-order ${className}` : ''"
+               @click="getIndexGoodsBySort('look', 3)">浏览量
+          </div>
         </div>
       </div>
 
@@ -46,15 +53,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, toRefs, onUnmounted, ref } from 'vue'
+import { defineComponent, onMounted, reactive, toRefs } from 'vue'
 import { fetchCategoriesApi } from '@/api/category'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'Banner',
   setup() {
+    const store = useStore()
+
     const state = reactive({
       categories: [],
-      actionCategory: {}
+      actionCategory: {},
+      active: 1,
+      order: 'ASC',
+      className: 'el-icon-bottom',
+      searchText: '所有二手商品'
     })
 
     // 获取分类
@@ -71,6 +85,14 @@ export default defineComponent({
       }
     }
 
+    // 根据时间、价钱、浏览量排序获取商品
+    const getIndexGoodsBySort = (sort: string, ac: number) => {
+      state.order === 'ASC' ? state.order = 'DESC' : state.order = 'ASC'
+      state.order === 'ASC' ? state.className = 'el-icon-top' : state.className = 'el-icon-bottom'
+      state.active = ac
+      store.dispatch('sortChange', { sort, order: state.order })
+    }
+
     onMounted(() => {
       getCategories()
     })
@@ -85,10 +107,18 @@ export default defineComponent({
       state.actionCategory = {}
     }
 
+    // 根据分类查询商品
+    const getGoodsByCategory = (id: number, name: string) => {
+      state.searchText = name
+      store.dispatch('getIndexGoodsByCategoryId', id)
+    }
+
     return {
       ...toRefs(state),
       showCategoryDetail,
-      hideCategoryDetail
+      hideCategoryDetail,
+      getIndexGoodsBySort,
+      getGoodsByCategory
     }
   }
 })

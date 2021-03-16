@@ -43,9 +43,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, onMounted, reactive, toRefs } from 'vue'
+import { defineComponent, onMounted, reactive, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
-import { warningNotification } from '@/utils/notification'
 import { fetchLettersApi } from '@/api/message'
 import Header from '@/components/Header.vue'
 
@@ -67,15 +66,6 @@ export default defineComponent({
       letterList: []
     })
 
-    onBeforeMount(() => {
-      const token = window.sessionStorage.getItem('token')
-      if (!token) {
-        warningNotification('尚未登录，请先登录！')
-        router.push('/')
-        return
-      }
-    })
-
     onMounted(() => {
       getLetterList()
     })
@@ -84,6 +74,7 @@ export default defineComponent({
     const getLetterList = async () => {
       const { data } = await fetchLettersApi(state.query)
       if (data.success) {
+        console.log(data.data.letterUnreadCount)
         state.letterUnreadCount = data.data.letterUnreadCount
         state.letterTotal = data.data.conversations.total
         state.letterList = data.data.conversations.items

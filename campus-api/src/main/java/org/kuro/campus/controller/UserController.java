@@ -1,9 +1,11 @@
 package org.kuro.campus.controller;
 
+import com.aliyuncs.exceptions.ClientException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.kuro.campus.model.entity.User;
 import org.kuro.campus.model.response.Result;
+import org.kuro.campus.model.response.ResultCode;
 import org.kuro.campus.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -39,5 +41,21 @@ public class UserController {
     @ApiOperation(value = "后台登录", notes = "后台登录接口，根据用户的账号和角色进行判断")
     public Result adminLogin(@RequestBody @Valid User user, HttpServletRequest request) {
         return userService.adminLogin(user, request);
+    }
+
+    @GetMapping("/pri/user/code")
+    @ApiOperation(value = "验证码", notes = "根据邮箱发送验证码，1为注册验证码，其余为改密验证码")
+    public Result sendCode(
+            @RequestParam(value = "phone", required = true) String phone,
+            @RequestParam(value = "type", defaultValue = "1") Integer type
+    ) throws ClientException {
+        return this.userService.sendCode(phone, type);
+    }
+
+    @PutMapping("pri/user/setting/{code}")
+    @ApiOperation(value = "修改信息", notes = "修改用户的地址和手机号码")
+    public Result setting(@RequestBody User user, @PathVariable("code") String code) {
+        userService.setting(user, code);
+        return Result.ok(ResultCode.UPDATE_SUCCESS);
     }
 }

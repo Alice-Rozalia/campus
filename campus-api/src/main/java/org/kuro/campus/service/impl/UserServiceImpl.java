@@ -1,9 +1,12 @@
 package org.kuro.campus.service.impl;
 
 import com.aliyun.oss.ServiceException;
+import com.aliyuncs.exceptions.ClientException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.kuro.campus.auth.JWTToken;
+import org.kuro.campus.handler.BusinessException;
 import org.kuro.campus.mapper.UserMapper;
 import org.kuro.campus.mapper.UserRoleMapper;
 import org.kuro.campus.model.bean.ActiveUser;
@@ -14,8 +17,12 @@ import org.kuro.campus.model.entity.UserRole;
 import org.kuro.campus.model.response.Result;
 import org.kuro.campus.model.response.ResultCode;
 import org.kuro.campus.service.UserService;
+import org.kuro.campus.utils.CurrentUser;
 import org.kuro.campus.utils.JWTUtils;
+import org.kuro.campus.utils.NumberUtils;
+import org.kuro.campus.utils.SmsListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -24,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author: 白鸟亦悲否？
@@ -41,8 +49,17 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRoleMapper userRoleMapper;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    @Autowired
+    private SmsListener smsListener;
+
+    private static final String key_prefix = "user: verify";
+
     /**
      * 注册
+     *
      * @param user
      * @return
      */
@@ -158,6 +175,50 @@ public class UserServiceImpl implements UserService {
             }
         }
         return Result.error(ResultCode.USER_CREDENTIALS_ERROR);
+    }
+
+    /**
+     * 发送验证码，1为注册，2为改密
+     * @param phone
+     * @param type
+     * @return
+     */
+    @Override
+    public Result sendCode(String phone, Integer type) throws ClientException {
+        if (StringUtils.isBlank(phone)) {
+            return Result.error(ResultCode.PARAM_IS_BLANK);
+        }
+
+        // 生成6位随机验证码
+        String code = NumberUtils.generateCode(6);
+        Map<String, String> msg = new HashMap<>();
+        msg.put("phone", phone);
+        msg.put("code", code);
+        if (type == 1) {
+            // 注册
+            smsListener.sendSms(msg, "SMS_200692839");
+        } else {
+            // 改密
+            smsListener.sendSms(msg, "SMS_206563694");
+        }
+        // 把验证码保存到redis
+        redisTemplate.opsForValue().set(key_prefix + phone, code, 5, TimeUnit.MINUTES);
+        return Result.ok(ResultCode.PHONE_CODE_SEND);
+    }
+
+    /**
+     * 修改信息
+     * @param user
+     * @return
+     */
+    @Override
+    public Integer setting(User user, String code) {
+        String redisCode = (String) redisTemplate.opsForValue().get(key_prefix + user.getPhone());
+        if (!StringUtils.equals(code, redisCode)) {
+            throw new BusinessException(ResultCode.CODE_ERROR.getCode(), ResultCode.CODE_ERROR.getMessage());
+        }
+        user.setId(CurrentUser.getCurrentUser().getId());
+        return userMapper.updateByPrimaryKeySelective(user);
     }
 
     // 随机头像

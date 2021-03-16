@@ -115,6 +115,14 @@ public class MessageController {
         return Result.ok(ResultCode.SEND_LETTER_SUCCESS);
     }
 
+    @GetMapping("/pri/message/unreadLetter")
+    @ApiOperation(value = "未读私信", notes = "获取未读的私信")
+    public Result unreadLetter() {
+        User user = CurrentUser.getCurrentUser();
+        Integer letterUnreadCount = messageService.findLetterUnreadCount(user.getId(), null);
+        return Result.ok().data("unreadLetter", letterUnreadCount);
+    }
+
     private List<Integer> getLetterIds(List<Message> letterList) {
         List<Integer> ids = new ArrayList<>();
 

@@ -14,7 +14,8 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/release_goods',
     name: 'Release',
-    component: () => import('@/views/Release.vue')
+    component: () => import('@/views/Release.vue'),
+    meta: { requiredLogin: true }
   },
   {
     path: '/detail/:id',
@@ -24,17 +25,26 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/message',
     name: 'Message',
-    component: () => import('@/views/Message.vue')
+    component: () => import('@/views/Message.vue'),
+    meta: { requiredLogin: true }
   },
   {
     path: '/letter/:id',
     name: 'Letter',
-    component: () => import('@/views/Letter.vue')
+    component: () => import('@/views/Letter.vue'),
+    meta: { requiredLogin: true }
   },
   {
     path: '/my_center',
     name: 'MyCenter',
-    component: () => import('@/views/MyCenter.vue')
+    component: () => import('@/views/MyCenter.vue'),
+    meta: { requiredLogin: true }
+  },
+  {
+    path: '/setting',
+    name: 'Setting',
+    component: () => import('@/views/Setting.vue'),
+    meta: { requiredLogin: true }
   },
   {
     path: '/admin/login',
@@ -46,6 +56,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Admin',
     component: () => import('@/views/admin/Admin.vue'),
     redirect: '/admin/index',
+    meta: { requiredLogin: true },
     children: [{
       path: '/admin/index',
       name: 'AdminIndex',
@@ -62,6 +73,16 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHashHistory(),
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  const { requiredLogin } = to.meta
+  const token = window.sessionStorage.getItem('token')
+  if (!token && requiredLogin) {
+    next('/login')
+  } else {
+    next()
+  }
 })
 
 export default router

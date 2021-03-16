@@ -9,6 +9,7 @@ import org.kuro.campus.model.page.PageResult;
 import org.kuro.campus.model.response.Result;
 import org.kuro.campus.model.response.ResultCode;
 import org.kuro.campus.model.vo.GoodsDetailVo;
+import org.kuro.campus.model.vo.GoodsVo;
 import org.kuro.campus.service.GoodsService;
 import org.kuro.campus.utils.CurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +41,12 @@ public class GoodsController {
     public Result indexGoods(
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "limit", defaultValue = "8") Integer limit,
-            @RequestParam(value = "qualification", defaultValue = "1") Integer qualification
+            @RequestParam(value = "sort", defaultValue = "create_date") String sort,
+            @RequestParam(value = "order", defaultValue = "DESC") String order,
+            @RequestParam(value = "key", required = false) String key
     ) {
         // qualification --> 排序条件，1表示根据创建时间排序，2表价格，3表浏览量
-        return goodsService.indexGoods(page, limit, qualification);
+        return goodsService.indexGoods(page, limit, sort, order, key);
     }
 
     @GetMapping("/pub/goods/{goodsId}")
@@ -76,5 +79,16 @@ public class GoodsController {
         goodsService.updateGoods(goods);
 
         return Result.ok(ResultCode.DELETE_SUCCESS);
+    }
+
+    @GetMapping("/pub/goods/index/{categoryId}")
+    @ApiOperation(value = "分页查首页商品", notes = "根据分类id查询首页商品")
+    public Result findIndexGoodsByCategoryId(
+            @PathVariable("categoryId") Integer categoryId,
+            @RequestParam(value = "page", defaultValue = "1") Integer page,
+            @RequestParam(value = "limit", defaultValue = "8") Integer limit
+    ) {
+        PageResult<GoodsVo> list = goodsService.findIndexGoodsByCategoryId(page, limit, categoryId);
+        return Result.ok().data("goods", list);
     }
 }

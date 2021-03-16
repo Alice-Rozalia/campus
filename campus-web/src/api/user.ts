@@ -23,3 +23,19 @@ export const adminLoginApi = ((data: any) => {
     data
   })
 })
+
+export const sendCodeApi = ((query: object) => {
+  return request({
+    url: '/pri/user/code',
+    method: 'get',
+    params: query
+  })
+})
+
+export const setUserInfoApi = ((data: any) => {
+  return request({
+    url: 'pri/user/setting/' + data.code,
+    method: 'put',
+    data
+  })
+})

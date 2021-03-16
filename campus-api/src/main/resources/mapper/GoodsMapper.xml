@@ -7,20 +7,20 @@
     </sql>
 
     <resultMap id="goodsDetail" type="org.kuro.campus.model.vo.GoodsDetailVo">
-        <id property="id" column="id" />
-        <result property="name" column="name" />
-        <result property="price" column="price" />
-        <result property="introduce" column="introduce" />
-        <result property="createDate" column="create_date" />
-        <result property="original" column="original" />
-        <result property="userId" column="user_id" />
-        <result property="category" column="category" />
-        <result property="username" column="username" />
-        <result property="avatar" column="avatar" />
-        <result property="address" column="address" />
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="price" column="price"/>
+        <result property="introduce" column="introduce"/>
+        <result property="createDate" column="create_date"/>
+        <result property="original" column="original"/>
+        <result property="userId" column="user_id"/>
+        <result property="category" column="category"/>
+        <result property="username" column="username"/>
+        <result property="avatar" column="avatar"/>
+        <result property="address" column="address"/>
         <collection property="images" ofType="org.kuro.campus.model.entity.Image">
-            <id property="id" column="iid" />
-            <result property="url" column="url" />
+            <id property="id" column="iid"/>
+            <result property="url" column="url"/>
         </collection>
     </resultMap>
 
@@ -29,29 +29,55 @@
         FROM tb_goods g
         LEFT JOIN tb_category c ON g.category_id = c.id
         WHERE g.enabled = 1
-        <if test="qualification == 1">
-            ORDER BY g.create_date DESC
+        <if test="key != null and key != ''">
+            AND g.name LIKE concat('%',#{key},'%')
+            OR g.introduce LIKE concat('%',#{key},'%')
         </if>
-        <if test="qualification == 2">
-            ORDER BY g.price DESC
-        </if>
-        <if test="qualification == 3">
-            ORDER BY g.look DESC
-        </if>
+        ORDER BY ${sort} ${order}
+        LIMIT #{page}, #{limit}
+    </select>
+
+    <select id="indexGoodsByCategoryId" resultType="org.kuro.campus.model.vo.GoodsVo">
+        SELECT g.id, g.name, g.price, g.introduce, g.create_date, g.look, c.`name` as category
+        FROM tb_goods g
+                 LEFT JOIN tb_category c ON g.category_id = c.id
+        WHERE g.enabled = 1
+          AND g.category_id = #{categoryId}
+        ORDER BY g.create_date DESC
         LIMIT #{page}, #{limit}
     </select>
 
     <select id="goodsCount" resultType="java.lang.Integer">
-        SELECT count(*) FROM tb_goods
+        SELECT count(*)
+        FROM tb_goods
+        WHERE enabled = 1
+    </select>
+
+    <select id="indexGoodsByCategoryIdCount" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM tb_goods
+        WHERE enabled = 1
+          AND category_id = #{categoryId}
     </select>
 
     <select id="goodsDetailById" resultMap="goodsDetail">
-        SELECT g.id, g.name, g.price, g.introduce, g.create_date, g.original, g.user_id,
-               c.`name` as category, u.username,u.avatar,u.address, i.id as iid, i.url
+        SELECT g.id,
+               g.name,
+               g.price,
+               g.introduce,
+               g.create_date,
+               g.original,
+               g.user_id,
+               c.`name` as category,
+               u.username,
+               u.avatar,
+               u.address,
+               i.id     as iid,
+               i.url
         FROM tb_goods g
-        LEFT JOIN tb_category c ON g.category_id = c.id
-        LEFT JOIN tb_user u ON u.id = g.user_id
-        LEFT JOIN tb_image i ON i.entity_id = g.id
+                 LEFT JOIN tb_category c ON g.category_id = c.id
+                 LEFT JOIN tb_user u ON u.id = g.user_id
+                 LEFT JOIN tb_image i ON i.entity_id = g.id
         WHERE g.id = #{id}
     </select>
 
@@ -59,14 +85,14 @@
         SELECT id, `name`, price
         FROM tb_goods
         WHERE enabled = 1
-        AND id = #{id}
+          AND id = #{id}
     </select>
 
     <select id="findMyGoods" resultType="org.kuro.campus.model.entity.Goods">
-        SELECT id, `name`, price,`create_date`,`look`
+        SELECT id, `name`, price, `create_date`, `look`
         FROM tb_goods
         WHERE enabled = 1
-        AND user_id = #{userId}
+          AND user_id = #{userId}
         ORDER BY `create_date` DESC
         LIMIT #{page}, #{limit}
     </select>
@@ -75,6 +101,6 @@
         SELECT count(id)
         FROM tb_goods
         WHERE enabled = 1
-        AND user_id = #{userId}
+          AND user_id = #{userId}
     </select>
 </mapper>

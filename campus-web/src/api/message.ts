@@ -8,6 +8,13 @@ export const fetchLettersApi = ((query: object) => {
   })
 })
 
+export const fetchUnreadLettersApi = (() => {
+  return request({
+    url: '/pri/message/unreadLetter',
+    method: 'get'
+  })
+})
+
 export const fetchLetterDetailApi = ((id: string | string[], query: object) => {
   return request({
     url: '/pri/message/detail/' + id,

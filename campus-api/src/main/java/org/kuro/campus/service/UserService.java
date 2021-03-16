@@ -1,5 +1,6 @@
 package org.kuro.campus.service;
 
+import com.aliyuncs.exceptions.ClientException;
 import org.kuro.campus.model.entity.Permission;
 import org.kuro.campus.model.entity.Role;
 import org.kuro.campus.model.entity.User;
@@ -47,4 +48,19 @@ public interface UserService {
     User findUserById(Integer id);
 
     Result adminLogin(User user, HttpServletRequest request);
+
+    /**
+     * 发送验证码，1为注册，2为改密
+     * @param phone
+     * @param type
+     * @return
+     */
+    Result sendCode(String phone, Integer type) throws ClientException;
+
+    /**
+     * 修改信息
+     * @param user
+     * @return
+     */
+    Integer setting(User user, String code);
 }

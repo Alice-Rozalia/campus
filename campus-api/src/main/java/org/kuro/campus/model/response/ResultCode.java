@@ -40,7 +40,7 @@ public enum ResultCode implements CustomizeResultCode {
     DELETE_ERROR(3806, "删除失败！"),
 
     REGISTER_SUCCESS(4001, "注册成功！"),
-    GOODS_PUBLISH_SUCCESS(4002,"商品发布成功！"),
+    GOODS_PUBLISH_SUCCESS(4002, "商品发布成功！"),
     PHONE_IS_NOT_BIND(4003, "您尚未绑定手机号或填写地址，请先前往完善个人信息！"),
 
     SEND_LETTER_SUCCESS(4501, "私信发送成功！"),
@@ -48,8 +48,11 @@ public enum ResultCode implements CustomizeResultCode {
     FOLLOW_WITH_INTEREST(4601, "已关注！"),
     UNFOLLOW_WITH_INTEREST(4602, "已取消关注！"),
 
+    PHONE_CODE_SEND(1251, "验证码已发送手机，请注意查收！"),
+    CODE_ERROR(1252, "验证码错误！"),
+
     /*运行时异常*/
-    ARITHMETIC_EXCEPTION(9001,"算数异常！"),
+    ARITHMETIC_EXCEPTION(9001, "算数异常！"),
     HAS_ASSOCIATED_DATA(9100, "该数据有关联数据，操作失败！"),
     DATABASE_EXCEPTION(9120, "数据库异常！");
 
@@ -57,7 +60,7 @@ public enum ResultCode implements CustomizeResultCode {
 
     private String message;
 
-    ResultCode(Integer code,String message){
+    ResultCode(Integer code, String message) {
         this.code = code;
         this.message = message;
     }

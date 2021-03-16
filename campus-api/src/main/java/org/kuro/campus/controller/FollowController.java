@@ -3,7 +3,6 @@ package org.kuro.campus.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.kuro.campus.event.EventProducer;
 import org.kuro.campus.model.entity.Event;
 import org.kuro.campus.model.entity.User;
 import org.kuro.campus.model.response.Result;
@@ -30,26 +29,12 @@ public class FollowController implements CustomConstant {
     @Autowired
     private FollowService followService;
 
-    @Autowired
-    private EventProducer eventProducer;
-
     @RequiresPermissions({"follow:interest"})
     @PostMapping("/pri/follow/{goodsId}")
     @ApiOperation(value = "关注", notes = "关注某个实体")
     public Result follow(@PathVariable("goodsId") Integer goodsId) {
         User user = CurrentUser.getCurrentUser();
         followService.follow(user.getId(), ENTITY_TYPE_GOODS, goodsId);
-
-        // 触发关注事件
-        Event event = new Event()
-                .setTopic(TOPIC_FOLLOW)
-                .setUserId(user.getId())
-                .setEntityType(ENTITY_TYPE_GOODS)
-                .setEntityId(goodsId)
-                .setEntityUserId(goodsId)
-                .setData("goodsId", goodsId);
-
-        eventProducer.fireEvent(event);
 
         return Result.ok(ResultCode.FOLLOW_WITH_INTEREST);
     }

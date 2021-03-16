@@ -16,21 +16,16 @@
       </el-button>
     </el-form-item>
 
-    <touch-verify-code v-if="isShow" class="code" @success="verifySuccess" @failed="verifyFailed"/>
   </el-form>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, getCurrentInstance, onBeforeMount } from 'vue'
-import TouchVerifyCode from '@/components/code/TouchVerifyCode.vue'
-import { warnMessage, successMessage } from '@/utils/message'
+import { successMessage } from '@/utils/message'
 import { registerApi } from '@/api/user'
 
 export default defineComponent({
   name: 'RegisterForm',
-  components: {
-    TouchVerifyCode
-  },
   props: {
     registerUser: {
       type: Object,
@@ -44,7 +39,6 @@ export default defineComponent({
   setup(props) {
     let vm: any
     const loading = ref(false)
-    const isShow = ref(false)
 
     // 获取组件实例
     onBeforeMount(() => {
@@ -55,51 +49,34 @@ export default defineComponent({
       vm.refs[formName].validate((valid: boolean) => {
         if (!valid) return
         loading.value = true
-        isShow.value = true
+        registerApi(props.registerUser).then(({ data }) => {
+          if (data.success) {
+            successMessage(data.message)
+            loading.value = false
+          }
+        }).catch(err => {
+          loading.value = false
+        })
       })
-    }
-
-    const verifySuccess = async (time: number) => {
-      if (time > 5) {
-        warnMessage('验证超时！')
-        loading.value = false
-        isShow.value = false
-        return
-      }
-
-      const { data } = await registerApi(props.registerUser)
-      if (data.success) {
-        successMessage(data.message)
-      }
-      loading.value = false
-      isShow.value = false
-    }
-
-    const verifyFailed = () => {
-      loading.value = false
-      isShow.value = false
     }
 
     return {
       loading,
-      isShow,
-      register,
-      verifyFailed,
-      verifySuccess
+      register
     }
   }
 })
 </script>
 
 <style lang="less" scoped>
-  .register-form {
-    position: relative;
+.register-form {
+  position: relative;
 
-    .code {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
+  .code {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
+}
 </style>

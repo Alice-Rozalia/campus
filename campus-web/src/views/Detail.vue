@@ -257,6 +257,8 @@ export default defineComponent({
     // 发送私信
     const sendLetter = async () => {
       if (state.content.trim() === '') return warningNotification('私信内容不能为空！')
+      const token = window.sessionStorage.getItem('token')
+      if (!token) return warningNotification('尚未登录，请先登录！')
       const target = JSON.stringify(state.goods)
       const loginUser = JSON.stringify(state.loginUser)
 
