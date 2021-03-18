@@ -1,0 +1,59 @@
+.index-swiper {
+  height: 240rpx;
+  background-color: #31c27c;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding-left: 36rpx;
+}
+
+.link {
+  color: #fedb01;
+  font-size: 30rpx;
+}
+
+.image {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.time-text {
+  display: block;
+  font-size: 26rpx;
+  color: #fff;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.price {
+  color: #f01414;
+  font-size: 24rpx;
+}
+
+.item-text-view {
+  background: #000000;
+  height: 30px;
+  position: relative;
+  margin-top: -35rpx;
+  display: block;
+  opacity: 0.6
+}
+
+.content {
+  margin: 0.5%;
+  column-count: 2;
+  column-gap: 0px;
+}
+
+.item {
+  width: 98%;
+  height: auto;
+  text-align: center;
+  margin-left: 0.5%;
+  margin-right: 0.5%;
+  margin-bottom: 0.5%;
+  display: inline-block;
+  border: 1px solid #ccc;
+}

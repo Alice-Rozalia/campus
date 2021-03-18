@@ -1,0 +1,43 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/category/index",
+    "pages/goods_list/index",
+    "pages/goods_detail/index",
+    "pages/search/index",
+    "pages/collect/index",
+    "pages/user/index",
+    "pages/login/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#00a4ff",
+    "navigationBarTitleText": "校园二手交易网",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#8a8a8a",
+    "selectedColor": "#41abe2",
+    "backgroundColor": "#ffffff",
+    "position": "bottom",
+    "borderStyle": "black",
+    "list": [{
+      "pagePath": "pages/index/index",
+      "text": "首页",
+      "iconPath": "icons/home.png",
+      "selectedIconPath": "icons/home-o.png"
+    }, {
+      "pagePath": "pages/category/index",
+      "text": "分类",
+      "iconPath": "icons/category.png",
+      "selectedIconPath": "icons/category-o.png"
+    }, {
+      "pagePath": "pages/user/index",
+      "text": "我的",
+      "iconPath": "icons/my.png",
+      "selectedIconPath": "icons/my-o.png"
+    }]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

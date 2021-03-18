@@ -1,0 +1,48 @@
+page {
+  height: 100%;
+}
+
+.cates {
+  height: 100%;
+}
+
+.cates .cates-container {
+  display: flex;
+  height: calc(100vh - 90rpx);
+}
+
+.cates .cates-container .left-menu {
+  flex: 2;
+}
+
+.cates .cates-container .left-menu .active {
+  color: var(--themeColor);
+}
+
+.cates .cates-container .left-menu .menu-item {
+  height: 80rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30rpx;
+}
+
+.cates .cates-container .right-content {
+  flex: 5;
+}
+
+.cates .cates-container .right-content .goods-list {
+  display: flex;
+  flex-wrap: wrap;
+  padding-top: 50rpx;
+}
+
+.cates .cates-container .right-content .goods-list navigator {
+  text-align: center;
+  width: 33.33%;
+  margin-bottom: 30rpx;
+}
+
+.cates .cates-container .right-content .goods-list navigator image {
+  width: 50%;
+}

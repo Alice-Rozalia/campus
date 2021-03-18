@@ -1,0 +1,28 @@
+<view class="campus-index">
+  <!-- 搜索框 开始 -->
+  <SearchInput></SearchInput>
+  <!-- 搜索框 结束 -->
+
+  <!-- 轮播图 开始 -->
+  <view class="index-swiper">
+    <text>校园二手交易网</text>
+    <text>微信小程序版</text>
+    <text>Github：<text class="link">https://github.com/Alice-Rozalia/campus</text></text>
+    <text>线上地址：<text class="link">http://39.105.91.14</text></text>
+  </view>
+  <!-- 轮播图 结束 -->
+
+  <!-- 商品列表 开始 -->
+  <view class='content'>
+    <view class="item-view">
+      <view wx:for="{{goodsList}}" wx:key="id" class='item'>
+        <image class="image" src="{{item.cover}}" bindtap="previewImage" mode="widthFix"/>
+        <view class='item-text-view'>
+          <text class='time-text'>{{item.name}}</text>
+          <text class="iconfont icon-jiaqian price"> {{item.price}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  <!-- 商品列表 结束 -->
+</view>
