@@ -72,6 +72,29 @@
           "pathName": "pages/goods_list/index",
           "query": "cid=39",
           "scene": null
+        },
+        {
+          "name": "商品详情",
+          "pathName": "pages/goods_detail/index",
+          "query": "id=9",
+          "scene": null
+        },
+        {
+          "name": "登录",
+          "pathName": "pages/login/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "个人中心",
+          "pathName": "pages/user/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "搜索中心",
+          "pathName": "pages/search/index",
+          "scene": null
         }
       ]
     }

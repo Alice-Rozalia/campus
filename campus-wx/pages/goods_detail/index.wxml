@@ -1,2 +1,41 @@
-<!--pages/goods_detail/index.wxml-->
-<text>pages/goods_detail/index.wxml</text>
+<view class="detail-swiper">
+  <swiper autoplay circular indicator-dots>
+    <swiper-item wx:for="{{goods.images}}" wx:key="id" bindtap="handlePrevewImage" data-url="{{item.url}}">
+      <image mode="widthFix" src="{{item.url}}"></image>
+    </swiper-item>
+  </swiper>
+</view>
+
+<view class="goods-price-row">
+  <view class="iconfont icon-jiaqian goods-price"> {{goods.price}}</view>
+  <view class="goods-original">原价：{{goods.original}}</view>
+</view>
+
+<view class="goods-name-row">
+  <view class="goods-name">{{goods.name}}</view>
+  <view class="goods-collect">
+    <text class="iconfont icon-xing"></text>
+    <view class="collect-text">收藏</view>
+  </view>
+</view>
+
+<view class="goods-user">
+  <view>{{goods.username}} 发布于 {{goods.createDate}}</view>
+</view>
+
+<view class="goods-info">
+  <view>详细介绍</view>
+  <text>{{goods.introduce}}</text>
+</view>
+
+<view class="btm-tool">
+  <view class="tool-item">
+    <view class="iconfont icon-fenxiang"></view>
+    <view>分享</view>
+    <button open-type="share"></button>
+  </view>
+
+  <view class="tool-item btn_letter">
+    私信
+  </view>
+</view>

@@ -1,2 +1,44 @@
-<!--pages/user/index.wxml-->
-<text>pages/user/index.wxml</text>
+<view class="user-info-wrap">
+  <view wx:if="{{userinfo.avatarUrl}}" class="user-img-warp">
+    <image class="user-bg" src="{{userinfo.avatarUrl}}"></image>
+    <view class="user-info">
+      <image class="user-icon" src="{{userinfo.avatarUrl}}"></image>
+      <view class="user-name">{{userinfo.nickName}}</view>
+    </view>
+  </view>
+
+  <view wx:else class="user-btn">
+    <navigator url="/pages/login/index">
+      登录
+    </navigator>
+  </view>
+</view>
+
+<view class="user-content">
+  <view class="user-main">
+    <view class="history-warp">
+      <navigator>
+        <view class="his-num">0</view>
+        <view class="his-name">关注的商品</view>
+      </navigator>
+      <navigator>
+        <view class="his-num">0</view>
+        <view class="his-name">我的发布</view>
+      </navigator>
+      <navigator>
+        <view class="his-num">0</view>
+        <view class="his-name">我的足迹</view>
+      </navigator>
+    </view>
+
+    <view class="my-menu">
+      <view class="my-menu-item">消息中心</view>
+      <view class="my-menu-item">发布商品</view>
+      <view class="my-menu-item">账号设置</view>
+    </view>
+
+    <view class="recommend-warp">
+      把应用推荐给其他人
+    </view>
+  </view>
+</view>

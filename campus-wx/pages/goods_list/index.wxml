@@ -3,15 +3,15 @@
   <Tabs tabs="{{tabs}}" bindtabsItemChange="handleTabsItemChange">
     <block wx:if="{{tabs[0].isActive}}">
       <view class="first-tab">
-        <navigator class="goods-item">
+        <navigator url="/pages/goods_detail/index?id={{item.id}}" class="goods-item" wx:for="{{goodsList}}" wx:key="id">
           <!-- 左侧图片 -->
           <view class="goods-img-warp">
-            <image mode="widthFix" src="http://kuro-campus.oss-cn-shenzhen.aliyuncs.com/2021/02/15/0a918a4577f7400a91ce0adcf88c4af8.jpg"></image>
+            <image mode="widthFix" src="{{item.cover}}"></image>
           </view>
           <!-- 右侧商品 -->
           <view class="goods-info-warp">
-            <view class="goods-name">撒大苏打撒旦啊是打发法啊带我去</view>
-            <view class="iconfont icon-jiaqian goods-price">13535</view>
+            <view class="goods-name">{{item.name}}</view>
+            <view class="iconfont icon-jiaqian goods-price"> {{item.price}}</view>
           </view>
         </navigator>
       </view>

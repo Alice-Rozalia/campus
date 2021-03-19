@@ -5,7 +5,6 @@
     "pages/goods_list/index",
     "pages/goods_detail/index",
     "pages/search/index",
-    "pages/collect/index",
     "pages/user/index",
     "pages/login/index"
   ],

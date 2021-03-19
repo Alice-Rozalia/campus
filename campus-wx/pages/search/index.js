@@ -1,66 +1,50 @@
-// pages/search/index.js
+import { request } from "../../request/index.js"
+import regeneratorRuntime from '../../lib/runtime/runtime'
+
 Page({
 
-  /**
-   * 页面的初始数据
-   */
   data: {
+    goods: [],
+    // 控制按钮显示
+    isFocus: false,
+    inpValue: ""
+  },
+  TimeId: -1,
 
+  // 输入框的值改变就会触发
+  handleInput(e) {
+    const { value } = e.detail
+    if (!value.trim()) {
+      return
+    }
+
+    // 显示取消按钮
+    this.setData({
+      isFocus: true
+    })
+
+    clearTimeout(this.TimeId)
+    this.TimeId = setTimeout(() => {
+      this.fetchGoodsByKey(value)
+    }, 1000)
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function (options) {
-
+  // 搜索商品
+  async fetchGoodsByKey(query) {
+    const { data } = await request({url: "/pub/goods/index?key=" + query})
+    if (data.success) {
+      this.setData({
+        goods: data.data.goods.items
+      })
+    }
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
+  // 点击取消按钮
+  handleCancel() {
+    this.setData({
+      inpValue: "",
+      isFocus: false,
+      goods: []
+    })
   }
 })

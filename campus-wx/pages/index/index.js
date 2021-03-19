@@ -15,7 +15,7 @@ Page({
 
   // 获取商品列表
   async fetchGoodsList() {
-    const { data } = await request({url: "/pub/goods/index"})
+    const { data } = await request({url: "/pub/goods/index?page=1&limit=24"})
     if (data.success) {
       this.setData({
         goodsList: data.data.goods.items

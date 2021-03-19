@@ -1,66 +1,35 @@
-// pages/goods_detail/index.js
+import { request } from "../../request/index.js"
+import regeneratorRuntime from '../../lib/runtime/runtime'
+
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    goods: {}
   },
+  goodsInfo: {},
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad: function (options) {
-
+    const { id } = options
+    this.fetchGoodsDetail(id)
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
+  // 获取商品详情
+  async fetchGoodsDetail(id) {
+    const { data } = await request({ url: "/pub/goods/" + id })
+    if (data.success) {
+      this.goodsInfo = data.data.goods
+      this.setData({
+        goods: data.data.goods
+      })
+    }
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
+  // 点击轮播图放大预览
+  async handlePrevewImage(e) {
+    const urls = this.goodsInfo.images.map(v => v.url)
+    const current = e.currentTarget.dataset.url
+    wx.previewImage({
+      urls,
+      current
+    })
   }
 })

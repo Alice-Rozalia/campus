@@ -1,1 +1,111 @@
-/* pages/goods_detail/index.wxss */
+page {
+  padding-bottom: 90rpx;
+}
+
+.detail-swiper swiper {
+  height: 65vw;
+  text-align: center;
+}
+
+.detail-swiper swiper image {
+  width: 60%;
+}
+
+.goods-price-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 15rpx;
+}
+
+.goods-price-row .goods-price {
+  color: #f01414;
+  font-size: 32rpx;
+}
+
+.goods-price-row .goods-original {
+  font-size: 28rpx;
+  color: #666;
+  text-decoration: line-through;
+}
+
+.goods-name-row {
+  display: flex;
+  border-top: 6rpx solid #dedede;
+  border-bottom: 6rpx solid #dedede;
+  padding: 10rpx 0;
+}
+
+.goods-name-row .goods-name {
+  flex: 5;
+  color: black;
+  font-size: 30rpx;
+  padding: 0 10rpx;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.goods-name-row .goods-collect {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-left: 1px solid #000;
+}
+
+.goods-user {
+  padding: 30rpx 10rpx;
+}
+
+.goods-info {
+  padding: 10rpx;
+  font-size: 32rpx;
+}
+
+.goods-info view {
+  color: var(--themeColor);
+  font-weight: 600;
+  padding: 20rpx;
+}
+
+.btm-tool {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 90rpx;
+  background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 24rpx;
+}
+
+.btm-tool .tool-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 24rpx;
+  position: relative;
+}
+
+.btm-tool .tool-item button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.btm-tool .btn_letter {
+  width: 200rpx;
+  height: 100%;
+  background-color: var(--themeColor);
+  color: #fff;
+  font-weight: 600;
+  font-size: 32rpx;
+}
