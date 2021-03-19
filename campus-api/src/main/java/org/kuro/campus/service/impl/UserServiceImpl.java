@@ -2,25 +2,23 @@ package org.kuro.campus.service.impl;
 
 import com.aliyun.oss.ServiceException;
 import com.aliyuncs.exceptions.ClientException;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.kuro.campus.auth.JWTToken;
 import org.kuro.campus.handler.BusinessException;
+import org.kuro.campus.mapper.LoginLogMapper;
 import org.kuro.campus.mapper.UserMapper;
 import org.kuro.campus.mapper.UserRoleMapper;
 import org.kuro.campus.model.bean.ActiveUser;
-import org.kuro.campus.model.entity.Permission;
-import org.kuro.campus.model.entity.Role;
-import org.kuro.campus.model.entity.User;
-import org.kuro.campus.model.entity.UserRole;
+import org.kuro.campus.model.entity.*;
+import org.kuro.campus.model.page.PageResult;
 import org.kuro.campus.model.response.Result;
 import org.kuro.campus.model.response.ResultCode;
 import org.kuro.campus.service.UserService;
-import org.kuro.campus.utils.CurrentUser;
-import org.kuro.campus.utils.JWTUtils;
-import org.kuro.campus.utils.NumberUtils;
-import org.kuro.campus.utils.SmsListener;
+import org.kuro.campus.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -54,6 +52,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private SmsListener smsListener;
+
+    @Autowired
+    private LoginLogMapper loginLogMapper;
 
     private static final String key_prefix = "user: verify";
 
@@ -135,6 +136,10 @@ public class UserServiceImpl implements UserService {
             Map<String, Object> map = new HashMap<>();
             map.put("token", token);
             map.put("user", activeUser);
+
+            // 记录登录日志
+            saveLoginLog(userByUsername.getUsername(), request);
+
             return Result.ok(ResultCode.LOGIN_SUCCESS).data(map);
         } catch (AuthenticationException e) {
             throw new ServiceException(e.getMessage());
@@ -168,6 +173,9 @@ public class UserServiceImpl implements UserService {
                     Map<String, Object> map = new HashMap<>();
                     map.put("token", token);
                     map.put("user", activeUser);
+
+                    // 记录登录日志
+                    saveLoginLog(userByUsername.getUsername(), request);
                     return Result.ok(ResultCode.LOGIN_SUCCESS).data(map);
                 } catch (AuthenticationException e) {
                     throw new ServiceException(e.getMessage());
@@ -179,6 +187,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 发送验证码，1为注册，2为改密
+     *
      * @param phone
      * @param type
      * @return
@@ -208,6 +217,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 修改信息
+     *
      * @param user
      * @return
      */
@@ -219,6 +229,29 @@ public class UserServiceImpl implements UserService {
         }
         user.setId(CurrentUser.getCurrentUser().getId());
         return userMapper.updateByPrimaryKeySelective(user);
+    }
+
+    @Override
+    public PageResult<User> getUserList(Integer page, Integer limit) {
+        if (page != null && limit != null) {
+            PageHelper.startPage(page, limit);
+        }
+        List<User> users = userMapper.selectAll();
+        PageInfo<User> pageInfo = new PageInfo<>(users);
+        Integer total = Math.toIntExact(pageInfo.getTotal());
+        return new PageResult<>(total, users);
+    }
+
+    public void saveLoginLog(String username, HttpServletRequest request) {
+        // 记录登录日志
+        LoginLog loginLog = new LoginLog();
+        loginLog.setLoginTime(new Date());
+        loginLog.setUsername(username);
+        // 获取 ip 地址
+        loginLog.setIp(IPUtil.getIpAddr(request));
+        // 获取地理位置
+        loginLog.setLocation(AddressUtil.getCityInfo(IPUtil.getIpAddr(request)));
+        loginLogMapper.insertSelective(loginLog);
     }
 
     // 随机头像

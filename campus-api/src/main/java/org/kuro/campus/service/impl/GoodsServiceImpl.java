@@ -1,5 +1,7 @@
 package org.kuro.campus.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.kuro.campus.mapper.GoodsMapper;
 import org.kuro.campus.mapper.ImageMapper;
@@ -146,5 +148,15 @@ public class GoodsServiceImpl implements GoodsService {
             good.setCover(image.getUrl());
         }
         return new PageResult<>(total, goods);
+    }
+
+    @Override
+    public PageResult<Goods> findAllGoods(Integer page, Integer limit) {
+        if (page != null && limit != null) {
+            PageHelper.startPage(page, limit);
+        }
+        List<Goods> goods = goodsMapper.selectAll();
+        PageInfo<Goods> pageInfo = new PageInfo<>(goods);
+        return new PageResult<>(Math.toIntExact(pageInfo.getTotal()), goods);
     }
 }

@@ -1,9 +1,11 @@
 package org.kuro.campus.service;
 
 import com.aliyuncs.exceptions.ClientException;
+import com.github.pagehelper.PageInfo;
 import org.kuro.campus.model.entity.Permission;
 import org.kuro.campus.model.entity.Role;
 import org.kuro.campus.model.entity.User;
+import org.kuro.campus.model.page.PageResult;
 import org.kuro.campus.model.response.Result;
 
 import javax.servlet.http.HttpServletRequest;
@@ -63,4 +65,6 @@ public interface UserService {
      * @return
      */
     Integer setting(User user, String code);
+
+    PageResult<User> getUserList(Integer page, Integer limit);
 }

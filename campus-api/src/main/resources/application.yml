@@ -1,0 +1,50 @@
+server:
+  port: 10086
+  compression:
+    enabled: true # 开启gzip压缩
+
+spring:
+  application:
+    name: campus
+  datasource:
+    url: jdbc:mysql:///campus?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    timeout: 5000
+    database: 11
+  servlet:
+    multipart:
+      max-file-size: 3MB # 单次最大请求文件大小
+      max-request-size: 10MB # 总请求最大文件大小
+
+mybatis:
+  type-aliases-package: org.kuro.campus.model.entity
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 开启控制台打印 sql
+    map-underscore-to-camel-case: true                    # 下划线转驼峰配置
+    use-generated-keys: true
+  mapper-locations: classpath:mapper/*.xml                # 配置扫描
+
+alioss:
+  endpoint: # 你自己的accessKeyId
+  accessKeyId: # 你自己的AccessKeySecret
+  accessKeySecret: # 签名名称
+  bucketName: # 模板名称
+
+campus:
+  sms:
+    accessKeyId:  # 你自己的accessKeyId
+    accessKeySecret:  # 你自己的AccessKeySecret
+    signName:  # 签名名称
+    verifyCodeTemplate:  # 模板名称
+
+logging:
+  level:
+    root: warn
+    org.blog: info
+  file:
+    name: log/blog.log

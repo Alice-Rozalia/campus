@@ -115,6 +115,7 @@ public class MessageController {
         return Result.ok(ResultCode.SEND_LETTER_SUCCESS);
     }
 
+    @RequiresPermissions({"message:unreadLetter"})
     @GetMapping("/pri/message/unreadLetter")
     @ApiOperation(value = "未读私信", notes = "获取未读的私信")
     public Result unreadLetter() {

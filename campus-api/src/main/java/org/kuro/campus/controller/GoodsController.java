@@ -45,7 +45,6 @@ public class GoodsController {
             @RequestParam(value = "order", defaultValue = "DESC") String order,
             @RequestParam(value = "key", required = false) String key
     ) {
-        // qualification --> 排序条件，1表示根据创建时间排序，2表价格，3表浏览量
         return goodsService.indexGoods(page, limit, sort, order, key);
     }
 
@@ -90,5 +89,16 @@ public class GoodsController {
     ) {
         PageResult<GoodsVo> list = goodsService.findIndexGoodsByCategoryId(page, limit, categoryId);
         return Result.ok().data("goods", list);
+    }
+
+    @RequiresPermissions({"goods:list"})
+    @GetMapping("/pri/goods/list")
+    @ApiOperation(value = "全部商品", notes = "获取全部商品")
+    public Result getAllGoodsList(
+            @RequestParam(value = "page", required = false) Integer page,
+            @RequestParam(value = "limit", required = false) Integer limit
+    ) {
+        PageResult<Goods> goods = goodsService.findAllGoods(page, limit);
+        return Result.ok().data("goods", goods);
     }
 }

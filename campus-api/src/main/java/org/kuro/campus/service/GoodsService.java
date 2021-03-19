@@ -74,4 +74,6 @@ public interface GoodsService {
      * @return GoodsVo的分页对象
      */
     PageResult<GoodsVo> findIndexGoodsByCategoryId(Integer page, Integer limit, Integer categoryId);
+
+    PageResult<Goods> findAllGoods(Integer page, Integer limit);
 }
