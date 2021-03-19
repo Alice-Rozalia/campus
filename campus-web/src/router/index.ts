@@ -59,8 +59,20 @@ const routes: Array<RouteRecordRaw> = [
     meta: { requiredLogin: true },
     children: [{
       path: '/admin/index',
-      name: 'AdminIndex',
+      name: '后台首页',
       component: () => import('@/views/admin/Index.vue')
+    }, {
+      path: '/admin/users',
+      name: '用户列表',
+      component: () => import('@/views/admin/User.vue')
+    }, {
+      path: '/admin/goods',
+      name: '商品列表',
+      component: () => import('@/views/admin/Goods.vue')
+    }, {
+      path: '/admin/login_log',
+      name: '登录日志',
+      component: () => import('@/views/admin/Log.vue')
     }]
   },
   {

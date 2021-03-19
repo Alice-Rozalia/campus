@@ -25,9 +25,11 @@
     <div class="right-box">
       <div class="swiper">
         <el-carousel height="360px">
-          <el-carousel-item v-for="item in 3" :key="item">
-            <img src="https://kuro-campus.oss-cn-shenzhen.aliyuncs.com/swiper/majo_bg_s01up01_03.png"
-                 style="width: 100%;" alt="swiper"/>
+          <el-carousel-item>
+            <introduce/>
+          </el-carousel-item>
+          <el-carousel-item>
+            <introduce2/>
           </el-carousel-item>
         </el-carousel>
       </div>
@@ -56,9 +58,15 @@
 import { defineComponent, onMounted, reactive, toRefs } from 'vue'
 import { fetchCategoriesApi } from '@/api/category'
 import { useStore } from 'vuex'
+import Introduce from '@/components/Introduce.vue'
+import Introduce2 from '@/components/Introduce2.vue'
 
 export default defineComponent({
   name: 'Banner',
+  components: {
+    Introduce,
+    Introduce2
+  },
   setup() {
     const store = useStore()
 

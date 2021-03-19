@@ -46,3 +46,11 @@ export const deleteMyGoodsByIdApi = ((id: number) => {
     method: 'put'
   })
 })
+
+export const fetchAllGoodsApi = ((query: object) => {
+  return request({
+    url: '/pri/goods/list',
+    method: 'get',
+    params: query
+  })
+})

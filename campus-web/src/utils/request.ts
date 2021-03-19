@@ -5,7 +5,7 @@ import NProgress from 'nprogress'
 const isPrd: boolean = process.env.NODE_ENV === 'production'
 
 const request = axios.create({
-  baseURL: isPrd ? '' : 'http://localhost:8360/api/v1',
+  baseURL: isPrd ? '' : 'http://localhost:10086/api/v1',
   timeout: 5000,
   headers: {
     Accept: 'application/json, text/plain, */*',

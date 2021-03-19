@@ -15,6 +15,19 @@ const menuList = [{
     id: '21',
     path: '/admin/users',
     menuName: '用户列表'
+  }, {
+    id: '22',
+    path: '/admin/login_log',
+    menuName: '登录日志'
+  }]
+}, {
+  id: '3',
+  icon: 'el-icon-goods',
+  menuName: '商品管理',
+  children: [{
+    id: '31',
+    path: '/admin/goods',
+    menuName: '商品列表'
   }]
 }]
 

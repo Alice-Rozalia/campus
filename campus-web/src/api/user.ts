@@ -39,3 +39,11 @@ export const setUserInfoApi = ((data: any) => {
     data
   })
 })
+
+export const fetchUserListApi = ((query: object) => {
+  return request({
+    url: 'pri/user/list',
+    method: 'get',
+    params: query
+  })
+})

@@ -56,6 +56,10 @@
       </el-header>
       <!-- 右侧内容主体 -->
       <el-main>
+        <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-bottom: 15px">
+          <el-breadcrumb-item :to="{ path: '/admin/index' }">首页</el-breadcrumb-item>
+          <el-breadcrumb-item>{{router.currentRoute.value.name}}</el-breadcrumb-item>
+        </el-breadcrumb>
         <router-view></router-view>
       </el-main>
     </el-container>
@@ -107,6 +111,7 @@ export default defineComponent({
 
     return {
       ...toRefs(state),
+      router,
       saveNavState,
       logout,
       menuList

@@ -55,7 +55,7 @@
             >
             </el-alert>
             <el-upload
-              action="http://localhost:8360/api/v1/pri/alioss/upload"
+              action="http://localhost:10086/api/v1/pri/alioss/upload"
               list-type="picture"
               :file-list="fileList"
               ref="upload"
